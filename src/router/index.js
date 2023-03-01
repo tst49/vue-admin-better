@@ -13,12 +13,12 @@ Vue.use(VueRouter)
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/loginModule/login'),
     hidden: true,
   },
   {
     path: '/register',
-    component: () => import('@/views/register/index'),
+    component: () => import('@/views/loginModule/register'),
     hidden: true,
   },
   {
@@ -49,6 +49,243 @@ export const asyncRoutes = [
           title: '首页',
           icon: 'home',
           affix: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/learning',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Learning',
+    alwaysShow: true,
+    meta: { title: '学习', icon: 'box-open' },
+    children: [
+      {
+        path: 'onlineAlgorithm',
+        name: 'OnlineAlgorithm',
+        component: () => import('@/views/personalCenter/index'),
+        meta: {
+          title: '在线算法',
+          permissions: ['admin', 'editor'],
+        },
+      },
+      {
+        path: 'literature',
+        name: 'Literature',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '资料库',
+          permissions: ['admin'],
+        },
+      },
+    ],
+  },
+  {
+    path: '/testing',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'Testing',
+    alwaysShow: true,
+    meta: { title: '题库', icon: 'box-open' },
+    children: [
+      {
+        path: 'all',
+        name: 'All',
+        component: () => import('@/views/personalCenter/index'),
+        meta: {
+          title: '全部题目',
+          permissions: ['admin', 'editor'],
+        },
+      },
+      {
+        path: 'spesial',
+        name: 'Spesial',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '专项练习',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'paper',
+        name: 'Paper',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '生成试卷',
+          permissions: ['admin'],
+        },
+      },
+    ],
+  },
+  {
+    path: '/standings',
+    component: Layout,
+    redirect: '/noRedirect',
+    children: [
+      {
+        path: 'index',
+        name: 'Index',
+        component: () => import('@/views/index/index'),
+        meta: {
+          title: '积分榜',
+          icon: 'home',
+          permissions: ['admin'],
+        },
+      },
+    ],
+  },
+  {
+    path: '/personalCenter',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'PersonalCenter',
+    alwaysShow: true,
+    meta: { title: '个人主页', icon: 'box-open' },
+    children: [
+      {
+        path: 'info',
+        name: 'Info',
+        component: () => import('@/views/personalCenter/index'),
+        meta: {
+          title: '个人资料',
+          permissions: ['admin', 'editor'],
+        },
+      },
+      {
+        path: 'setting',
+        name: 'Setting',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '个人设置',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'favorites',
+        name: 'Favorites',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '收藏夹',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'myDiscuss',
+        name: 'MyDiscuss',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '我的讨论',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'myTask',
+        name: 'MyTask',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '我的学习任务',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'testAnalysis',
+        name: 'TestAnalysis',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '做题分析',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'myPoints',
+        name: 'MyPoints',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '我的积分',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'myClazz',
+        name: 'MyClazz',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '我的班级',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'myPublish',
+        name: 'MyPublish',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '我发布的任务',
+          permissions: ['admin'],
+        },
+      },
+    ],
+  },
+  {
+    path: '/managementCenter',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'PersonalCenter',
+    alwaysShow: true,
+    meta: { title: '管理中心', icon: 'box-open' },
+    children: [
+      {
+        path: 'studentManagement',
+        name: 'StudentManagement',
+        component: () => import('@/views/personalCenter/index'),
+        meta: {
+          title: '学生管理',
+          permissions: ['admin', 'editor'],
+        },
+      },
+      {
+        path: 'clazzManagement',
+        name: 'ClazzManagement',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '班级管理',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'literatureManagement',
+        name: 'LiteratureManagement',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '资料库管理',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'questionManagement',
+        name: 'QuestionManagement',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '题库管理',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'discussManagement',
+        name: 'DiscussManagement',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '讨论区管理',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: 'pointsRulesManagement',
+        name: 'PointsRulesManagement',
+        component: () => import('@/views/vab/nested/menu1/index'),
+        meta: {
+          title: '积分规则管理',
+          permissions: ['admin'],
         },
       },
     ],
