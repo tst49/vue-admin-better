@@ -221,6 +221,7 @@
         this.listLoading = true
         const { data, totalCount } = await getList(this.queryForm)
         this.list = data
+        console.log(data)
         const imageList = []
         data.forEach((item, index) => {
           imageList.push(item.img)

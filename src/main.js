@@ -16,6 +16,10 @@ if (process.env.NODE_ENV === 'production') {
 
 Vue.config.productionTip = false
 
+import axios from 'axios'
+import './axios'
+Vue.prototype.$axios = axios
+
 new Vue({
   el: '#vue-admin-beautiful',
   router,

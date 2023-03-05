@@ -92,7 +92,7 @@ export const asyncRoutes = [
       {
         path: 'all',
         name: 'All',
-        component: () => import('@/views/personalCenter/index'),
+        component: () => import('@/views/testingModule/testPaper'),
         meta: {
           title: '全部题目',
           permissions: ['admin', 'editor'],
@@ -101,7 +101,7 @@ export const asyncRoutes = [
       {
         path: 'spesial',
         name: 'Spesial',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/testingModule/index'),
         meta: {
           title: '专项练习',
           permissions: ['admin'],
