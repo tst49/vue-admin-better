@@ -87,12 +87,26 @@
             </el-tooltip>
           </template>
         </el-table-column>
+        <el-table-column label="难度">
+          <template #default="{ row }">
+            <el-tag :type="row.level | levelFilter" effect="plain">
+              {{ levelList[row.level - 1] }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           label="题目"
           prop="title"
           width="400px"
         ></el-table-column>
+        <el-table-column label="题型">
+          <template #default="{ row }">
+            <el-tag :type="row.category | categoryFilter">
+              {{ parseCategory(row.category) }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           label="全站答题次数"
@@ -107,8 +121,7 @@
         ></el-table-column>
         <el-table-column show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="text" @click="handleDelete(row)">删除</el-button>
+            <el-button type="text" @click="haveTry(row)">作答</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -122,11 +135,16 @@
         @size-change="handleSizeChange"
       ></el-pagination>
     </el-card>
+    <single-question ref="question"></single-question>
   </div>
 </template>
 <script>
+  import SingleQuestion from './components/singleQuestion'
   export default {
-    name: 'PersonalCenter',
+    name: 'Index',
+    components: {
+      SingleQuestion,
+    },
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -135,6 +153,24 @@
           已解答: 'success',
         }
         return statusMap[status]
+      },
+      levelFilter(level) {
+        const levelMap = {
+          1: 'success',
+          2: 'warning',
+          3: 'danger',
+        }
+        return levelMap[level]
+      },
+      categoryFilter(status) {
+        const categoryMap = {
+          1: 'info',
+          2: 'warning',
+          3: 'success',
+          4: 'danger',
+          5: '',
+        }
+        return categoryMap[status]
       },
     },
     data() {
@@ -178,18 +214,24 @@
             attemptCount: 1000,
             passRatio: '50.2%',
             status: '未开始',
+            level: 1,
+            category: 1,
           },
           {
             title: '1232',
             attemptCount: 900,
             passRatio: '25.2%',
             status: '尝试过',
+            level: 2,
+            category: 2,
           },
           {
             title: '1232',
             attemptCount: 800,
             passRatio: '10.2%',
             status: '已解答',
+            level: 3,
+            category: 3,
           },
         ],
         listLoading: true,
@@ -211,6 +253,23 @@
         setTimeout(() => {
           this.listLoading = false
         }, 500)
+      },
+      haveTry(row) {
+        this.$refs['question'].haveTry(row)
+      },
+      parseCategory(category) {
+        switch (category) {
+          case 1:
+            return '单选题'
+          case 2:
+            return '多选题'
+          case 3:
+            return '判断题'
+          case 4:
+            return '填空题'
+          case 5:
+            return '简答题'
+        }
       },
     },
   }

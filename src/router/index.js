@@ -64,7 +64,7 @@ export const asyncRoutes = [
       {
         path: 'onlineAlgorithm',
         name: 'OnlineAlgorithm',
-        component: () => import('@/views/personalCenter/index'),
+        component: () => import('@/views/personalCenter/info'),
         meta: {
           title: '在线算法',
           permissions: ['admin', 'editor'],
@@ -146,7 +146,7 @@ export const asyncRoutes = [
       {
         path: 'info',
         name: 'Info',
-        component: () => import('@/views/personalCenter/index'),
+        component: () => import('@/views/personalCenter/info'),
         meta: {
           title: '个人资料',
           permissions: ['admin', 'editor'],
@@ -237,7 +237,7 @@ export const asyncRoutes = [
       {
         path: 'studentManagement',
         name: 'StudentManagement',
-        component: () => import('@/views/personalCenter/index'),
+        component: () => import('@/views/personalCenter/info'),
         meta: {
           title: '学生管理',
           permissions: ['admin', 'editor'],
@@ -264,7 +264,7 @@ export const asyncRoutes = [
       {
         path: 'questionManagement',
         name: 'QuestionManagement',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/managementModule/questionManagement'),
         meta: {
           title: '题库管理',
           permissions: ['admin'],
