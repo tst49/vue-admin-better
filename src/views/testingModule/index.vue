@@ -7,13 +7,13 @@
           <span>搜索</span>
           <el-form-item>
             <el-input
-              v-model.trim="queryForm.username"
-              placeholder="请输入用户名"
+              v-model.trim="queryForm.title"
+              placeholder="请输入题目"
               clearable
             />
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
+            <el-button icon="el-icon-search" type="primary" @click="fetchData">
               查询
             </el-button>
           </el-form-item>
@@ -21,8 +21,12 @@
       </el-row>
       <el-row>
         <vab-icon :icon="['fas', 'search']"></vab-icon>
-        <span>筛选</span>
-        <el-select v-model="value1" multiple placeholder="请选择">
+        <span>知识点</span>
+        <el-select
+          v-model="queryForm.questionTags"
+          multiple
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -34,26 +38,26 @@
       <el-row>
         <vab-icon :icon="['fas', 'search']"></vab-icon>
         <span>题型</span>
-        <el-checkbox-group v-model="questionCategory">
+        <el-checkbox-group v-model="queryForm.questionCategory">
           <el-checkbox-button
             v-for="category in categoryList"
-            :key="category"
-            :label="category"
+            :key="category.value"
+            :label="category.value"
           >
-            {{ category }}
+            {{ category.label }}
           </el-checkbox-button>
         </el-checkbox-group>
       </el-row>
       <el-row>
         <vab-icon :icon="['fas', 'search']"></vab-icon>
         <span>难度</span>
-        <el-checkbox-group v-model="questionLevel">
+        <el-checkbox-group v-model="queryForm.questionLevel">
           <el-checkbox-button
             v-for="level in levelList"
-            :key="level"
-            :label="level"
+            :key="level.value"
+            :label="level.value"
           >
-            {{ level }}
+            {{ level.label }}
           </el-checkbox-button>
         </el-checkbox-group>
       </el-row>
@@ -64,7 +68,6 @@
         v-loading="listLoading"
         :data="list"
         :element-loading-text="elementLoadingText"
-        :height="height"
         @selection-change="setSelectRows"
         @sort-change="tableSortChange"
       >
@@ -75,22 +78,15 @@
         ></el-table-column>
         <el-table-column show-overflow-tooltip label="状态">
           <template #default="{ row }">
-            <el-tooltip
-              :content="row.status"
-              class="item"
-              effect="dark"
-              placement="top-start"
-            >
-              <el-tag :type="row.status | statusFilter">
-                {{ row.status }}
-              </el-tag>
-            </el-tooltip>
+            <el-tag :type="row.status | statusFilter">
+              {{ row.status }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="难度">
           <template #default="{ row }">
             <el-tag :type="row.level | levelFilter" effect="plain">
-              {{ levelList[row.level - 1] }}
+              {{ levelList[row.level - 1].label }}
             </el-tag>
           </template>
         </el-table-column>
@@ -121,7 +117,7 @@
         ></el-table-column>
         <el-table-column show-overflow-tooltip label="操作">
           <template #default="{ row }">
-            <el-button type="text" @click="haveTry(row)">作答</el-button>
+            <el-button type="text" @click="haveTry(row.id)">作答</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -178,12 +174,47 @@
         queryForm: {
           pageNo: 1,
           pageSize: 10,
-          username: '',
+          title: '',
+          questionTags: [],
+          questionCategory: [],
+          questionLevel: [],
         },
-        questionCategory: [],
-        questionLevel: [],
-        categoryList: ['单选', '多选', '判断', '填空', '简答'],
-        levelList: ['简单', '中等', '困难'],
+        categoryList: [
+          {
+            value: '1',
+            label: '单选',
+          },
+          {
+            value: '2',
+            label: '多选',
+          },
+          {
+            value: '3',
+            label: '判断',
+          },
+          {
+            value: '4',
+            label: '填空',
+          },
+          {
+            value: '5',
+            label: '简答',
+          },
+        ],
+        levelList: [
+          {
+            value: '1',
+            label: '简单',
+          },
+          {
+            value: '2',
+            label: '中等',
+          },
+          {
+            value: '3',
+            label: '困难',
+          },
+        ],
         options: [
           {
             value: '选项1',
@@ -206,34 +237,7 @@
             label: '北京烤鸭',
           },
         ],
-        value1: [],
-        imgShow: true,
-        list: [
-          {
-            title: '1232',
-            attemptCount: 1000,
-            passRatio: '50.2%',
-            status: '未开始',
-            level: 1,
-            category: 1,
-          },
-          {
-            title: '1232',
-            attemptCount: 900,
-            passRatio: '25.2%',
-            status: '尝试过',
-            level: 2,
-            category: 2,
-          },
-          {
-            title: '1232',
-            attemptCount: 800,
-            passRatio: '10.2%',
-            status: '已解答',
-            level: 3,
-            category: 3,
-          },
-        ],
+        list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
@@ -249,10 +253,18 @@
     methods: {
       async fetchData() {
         this.listLoading = true
-        const imageList = []
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        this.$axios
+          .post('/testing/question/list', this.queryForm)
+          .then((res) => {
+            console.log(res)
+            this.list = res.data.data.list
+            // this.queryForm.pageNo = res.data.data.current
+            console.log(this.queryForm.pageNo)
+            this.total = res.data.data.total
+          })
+          .then(() => {
+            this.listLoading = false
+          })
       },
       haveTry(row) {
         this.$refs['question'].haveTry(row)
@@ -270,6 +282,25 @@
           case 5:
             return '简答题'
         }
+      },
+      handleSizeChange(val) {
+        this.queryForm.pageSize = val
+        this.fetchData()
+      },
+      handleCurrentChange(val) {
+        this.queryForm.pageNo = val
+        this.fetchData()
+      },
+      tableSortChange() {
+        const imageList = []
+        this.$refs.tableSort.tableData.forEach((item, index) => {
+          imageList.push(item.img)
+        })
+        this.imageList = imageList
+      },
+      setSelectRows(val) {
+        // console.log(val)
+        this.selectRows = val
       },
     },
   }

@@ -95,35 +95,74 @@
         结束考试
       </el-button>
     </el-card>
-    <el-card style="width: 75%; float: left; margin-left: 10px; height: 730px">
-      <div slot="header">
+    <el-card style="width: 75%; float: left; margin-left: 10px; height: 700px">
+      <div slot="header"></div>
+      <!-- 题目内容 -->
+      <el-row :gutter="20">
+        <span>{{ currentQuestion.content }}</span>
+      </el-row>
+      <!-- 单选或判断 -->
+      <el-radio-group
+        v-if="[1, 3].includes(currentQuestion.category)"
+        v-model="currentQuestion.answer[0]"
+      >
         <el-row :gutter="20">
-          <span>{{ currentQuestion.content }}</span>
+          <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
         </el-row>
-        <el-radio-group v-model="currentQuestion.answer">
-          <el-row :gutter="20">
-            <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
-          </el-row>
-          <el-row :gutter="20">
-            <el-radio label="B">B: {{ currentQuestion.options[1] }}</el-radio>
-          </el-row>
+        <el-row :gutter="20">
+          <el-radio label="B">B: {{ currentQuestion.options[1] }}</el-radio>
+        </el-row>
+        <div v-if="currentQuestion.category == 1">
           <el-row :gutter="20">
             <el-radio label="C">C: {{ currentQuestion.options[2] }}</el-radio>
           </el-row>
           <el-row :gutter="20">
             <el-radio label="D">D: {{ currentQuestion.options[3] }}</el-radio>
           </el-row>
-        </el-radio-group>
-      </div>
-      <el-button-group>
-        <el-button type="primary" icon="el-icon-arrow-left" plain>
-          上一题
-        </el-button>
-        <el-button type="primary" plain>
-          下一题
-          <i class="el-icon-arrow-right el-icon--right"></i>
-        </el-button>
-      </el-button-group>
+        </div>
+      </el-radio-group>
+      <!-- 多选 -->
+      <el-checkbox-group
+        v-else-if="currentQuestion.category == 2"
+        v-model="currentQuestion.answer"
+      >
+        <el-row :gutter="20">
+          <el-checkbox label="A">
+            A: {{ currentQuestion.options[0] }}
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="B">
+            B: {{ currentQuestion.options[1] }}
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="C">
+            C: {{ currentQuestion.options[2] }}
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="D">
+            D: {{ currentQuestion.options[3] }}
+          </el-checkbox>
+        </el-row>
+      </el-checkbox-group>
+      <!-- 填空或简答 -->
+      <el-input
+        v-else
+        v-model="currentQuestion.answer[0]"
+        type="textarea"
+        :rows="20"
+        placeholder="请输入内容"
+      ></el-input>
+      <el-divider></el-divider>
+      <el-button type="primary" icon="el-icon-arrow-left" plain>
+        上一题
+      </el-button>
+      <el-button type="primary" plain>
+        下一题
+        <i class="el-icon-arrow-right el-icon--right"></i>
+      </el-button>
     </el-card>
   </div>
 </template>
@@ -136,7 +175,8 @@
         content: '1+1=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       {
         no: 222,
@@ -144,7 +184,8 @@
         content: '1+2=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       {
         no: 3,
@@ -152,7 +193,8 @@
         content: '1+3=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       {
         no: 4,
@@ -160,7 +202,8 @@
         content: '1+4=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       {
         no: 5,
@@ -168,7 +211,8 @@
         content: '1+5=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       {
         no: 6,
@@ -176,7 +220,8 @@
         content: '1+6=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 1,
       },
       // {
       //   no: 7,
@@ -221,15 +266,17 @@
         content: '1+1=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
       {
-        no: 2,
-        id: 1002,
-        content: '1+2=?',
+        no: 1,
+        id: 1001,
+        content: '1+1=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
       {
         no: 3,
@@ -237,7 +284,8 @@
         content: '1+3=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
       {
         no: 4,
@@ -245,7 +293,8 @@
         content: '1+4=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
       {
         no: 5,
@@ -253,7 +302,8 @@
         content: '1+5=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
       {
         no: 6,
@@ -261,7 +311,8 @@
         content: '1+5=?',
         options: ['1', '2', '3', '4'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 2,
       },
     ],
     judgment: [
@@ -269,41 +320,46 @@
         no: 1,
         id: 1001,
         content: '1+1=?',
-        options: ['1', '2', '3', '4'],
+        options: ['对', '错'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 3,
       },
       {
         no: 2,
         id: 1002,
         content: '1+2=?',
-        options: ['1', '2', '3', '4'],
+        options: ['对', '错'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 3,
       },
       {
         no: 3,
         id: 1003,
         content: '1+3=?',
-        options: ['1', '2', '3', '4'],
+        options: ['对', '错'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 3,
       },
       {
         no: 4,
         id: 1004,
         content: '1+4=?',
-        options: ['1', '2', '3', '4'],
+        options: ['对', '错'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 3,
       },
       {
         no: 5,
         id: 1005,
         content: '1+5=?',
-        options: ['1', '2', '3', '4'],
+        options: ['对', '错'],
         show: '',
-        answer: '',
+        answer: [],
+        category: 3,
       },
     ],
     blank: [
@@ -311,33 +367,37 @@
         no: 1,
         id: 1001,
         content: '1+1=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 4,
       },
       {
         no: 2,
         id: 1002,
         content: '1+2=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 4,
       },
       {
         no: 3,
         id: 1003,
         content: '1+3=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 4,
       },
       {
         no: 4,
         id: 1004,
         content: '1+4=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 4,
       },
     ],
     text: [
@@ -345,25 +405,28 @@
         no: 1,
         id: 1001,
         content: '1+1=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 5,
       },
       {
         no: 2,
         id: 1002,
         content: '1+2=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 5,
       },
       {
         no: 3,
         id: 1003,
         content: '1+3=?',
-        options: ['1', '2', '3', '4'],
+        options: [],
         show: '',
-        answer: '',
+        answer: [],
+        category: 5,
       },
     ],
   }
@@ -374,9 +437,10 @@
       return {
         show: true,
         currentQuestion: {
+          no: 1,
           content: '',
           options: [],
-          answer: 'A',
+          answer: '',
         },
         questionList: {
           single: [],

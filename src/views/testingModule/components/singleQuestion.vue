@@ -2,115 +2,79 @@
   <el-dialog
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="500px"
+    width="900px"
     @close="close"
   >
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="题型" prop="category">
-        <el-select
-          v-model="form.category"
-          placeholder="请选择"
-          @change="categoryChange()"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="题目" prop="title">
-        <el-input v-model.trim="form.title" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="选项" prop="options">
-        <el-input
-          v-for="(option, index) in form.options"
-          :key="option"
-          v-model.trim="form.options[index]"
-          autocomplete="off"
-        >
-          <template slot="prepend">选项{{ index + 1 }}</template>
-          {{ option }}
-        </el-input>
-      </el-form-item>
-      <el-form-item label="答案" prop="answer">
-        <el-input v-model.trim="form.answer" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="知识点" prop="tags">
-        <el-tag
-          v-for="tag in form.tags"
-          :key="tag"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-        >
-          {{ tag }}
-        </el-tag>
-        <el-input
-          v-if="inputTagVisible"
-          ref="saveTagInput"
-          v-model="inputTagValue"
-          class="input-new-tag"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        ></el-input>
-        <el-button
-          v-else
-          class="button-new-tag"
-          size="small"
-          @click="showInput"
-        >
-          + New Tag
-        </el-button>
-      </el-form-item>
-    </el-form>
+    <!-- 题目内容 -->
+    <el-row :gutter="20">
+      <span>{{ currentQuestion.content }}</span>
+    </el-row>
+    <!-- 单选或判断 -->
+    <el-radio-group
+      v-if="[1, 3].includes(currentQuestion.category)"
+      v-model="currentQuestion.answer[0]"
+    >
+      <el-row :gutter="20">
+        <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
+      </el-row>
+      <el-row :gutter="20">
+        <el-radio label="B">B: {{ currentQuestion.options[1] }}</el-radio>
+      </el-row>
+      <div v-if="currentQuestion.category == 1">
+        <el-row :gutter="20">
+          <el-radio label="C">C: {{ currentQuestion.options[2] }}</el-radio>
+        </el-row>
+        <el-row :gutter="20">
+          <el-radio label="D">D: {{ currentQuestion.options[3] }}</el-radio>
+        </el-row>
+      </div>
+    </el-radio-group>
+    <!-- 多选 -->
+    <el-checkbox-group
+      v-else-if="currentQuestion.category == 2"
+      v-model="currentQuestion.answer"
+    >
+      <el-row :gutter="20">
+        <el-checkbox label="A">A: {{ currentQuestion.options[0] }}</el-checkbox>
+      </el-row>
+      <el-row :gutter="20">
+        <el-checkbox label="B">B: {{ currentQuestion.options[1] }}</el-checkbox>
+      </el-row>
+      <el-row :gutter="20">
+        <el-checkbox label="C">C: {{ currentQuestion.options[2] }}</el-checkbox>
+      </el-row>
+      <el-row :gutter="20">
+        <el-checkbox label="D">D: {{ currentQuestion.options[3] }}</el-checkbox>
+      </el-row>
+    </el-checkbox-group>
+    <!-- 填空或简答 -->
+    <el-input
+      v-else
+      v-model="currentQuestion.answer[0]"
+      type="textarea"
+      :rows="3"
+      autosize
+      placeholder="请输入内容"
+    ></el-input>
+    <!-- 操作面板 -->
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button type="primary" @click="submit">提 交</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-  const questionCategory = [
-    {
-      value: 1,
-      label: '单选题',
-    },
-    {
-      value: 2,
-      label: '多选题',
-    },
-    {
-      value: 3,
-      label: '判断题',
-    },
-    {
-      value: 4,
-      label: '填空题',
-    },
-    {
-      value: 5,
-      label: '简答题',
-    },
-  ]
   export default {
-    name: 'TableEdit',
+    name: 'SingleQuestion',
     data() {
       return {
-        options: questionCategory,
-        form: {
-          title: '',
-          options: ['', '', '', ''],
-          answer: '',
-          tags: [],
+        currentQuestion: {
+          content: '',
+          options: [],
           category: 1,
-        },
-        rules: {
-          title: [{ required: true, trigger: 'blur', message: '请输入题目' }],
-          answer: [{ required: true, trigger: 'blur', message: '请输入答案' }],
+          level: 1,
+          answer: [],
         },
         title: '',
         dialogFormVisible: false,
@@ -120,23 +84,26 @@
     },
     created() {},
     methods: {
-      haveTry(row) {
-        if (!row) {
-          this.title = '添加'
-        } else {
-          this.title = '编辑'
-          this.form = Object.assign({}, row)
-          // console.log(this.form)
-        }
+      haveTry(id) {
+        this.title = '答题'
+        this.$axios
+          .get('/testing/question/single', {
+            params: {
+              questionId: id,
+            },
+          })
+          .then((res) => {
+            this.currentQuestion.content = res.data.data.content
+            this.currentQuestion.answer = res.data.data.answer
+          })
         this.dialogFormVisible = true
       },
       close() {
-        this.$refs['form'].resetFields()
         this.form = this.$options.data().form
         this.dialogFormVisible = false
         this.$emit('fetch-data')
       },
-      save() {
+      submit() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
             const { msg } = await doEdit(this.form)

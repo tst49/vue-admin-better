@@ -46,7 +46,7 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="题目">
-              <span>{{ props.row.title }}</span>
+              <span>{{ props.row.content }}</span>
             </el-form-item>
             <el-form-item label="选项">
               <span>{{ props.row.options }}</span>
@@ -71,9 +71,16 @@
         type="selection"
         width="55"
       ></el-table-column>
+      <el-table-column label="难度">
+        <template #default="{ row }">
+          <el-tag :type="row.level | levelFilter" effect="plain">
+            {{ levelList[row.level - 1] }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="title"
+        prop="content"
         label="题目"
       ></el-table-column>
       <el-table-column label="题型">
@@ -126,33 +133,19 @@
         }
         return categoryMap[status]
       },
+      levelFilter(level) {
+        const levelMap = {
+          1: 'success',
+          2: 'warning',
+          3: 'danger',
+        }
+        return levelMap[level]
+      },
     },
     data() {
       return {
-        imgShow: true,
-        list: [
-          {
-            category: 1,
-            title: 'what your name?',
-            options: ['a', 'b', 'c'],
-            answer: 'a',
-            author: 'tst',
-            createTime: '2001',
-            modifyTime: '2003',
-            tags: ['死锁', '进程'],
-          },
-          {
-            category: 2,
-            title: 'what your name222222?',
-            options: ['a', 'b', 'c22222'],
-            answer: 'a222222',
-            author: 'tst222222',
-            createTime: '2001222222',
-            modifyTime: '2003222',
-            tags: ['死锁22', '进程22'],
-          },
-        ],
-        imageList: [],
+        levelList: ['简单', '中等', '困难'],
+        list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
@@ -162,7 +155,7 @@
         queryForm: {
           pageNo: 1,
           pageSize: 20,
-          title: '',
+          key: '',
         },
       }
     },
@@ -253,13 +246,28 @@
         // })
         // this.imageList = imageList
         // this.total = totalCount
-        setTimeout(() => {
-          this.listLoading = false
-        }, 500)
+        console.log(this.queryForm)
+        this.$axios
+          .get('/manage_center/question/list', {
+            params: {
+              key: this.queryForm.key,
+              pageNo: this.queryForm.pageNo,
+              pageSize: this.queryForm.pageSize,
+            },
+          })
+          .then((res) => {
+            console.log(res)
+            this.list = res.data.data.list
+            this.total = res.data.data.total
+          })
+          .then(() => {
+            this.listLoading = false
+          })
       },
     },
   }
 </script>
+
 <style>
   .demo-table-expand {
     font-size: 0;

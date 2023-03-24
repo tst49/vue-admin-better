@@ -13,20 +13,20 @@
           @change="categoryChange()"
         >
           <el-option
-            v-for="item in options"
+            v-for="item in categorys"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="题目" prop="title">
-        <el-input v-model.trim="form.title" autocomplete="off"></el-input>
+      <el-form-item label="题目" prop="content">
+        <el-input v-model.trim="form.content" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="选项" prop="options">
         <el-input
           v-for="(option, index) in form.options"
-          :key="option"
+          :key="index"
           v-model.trim="form.options[index]"
           autocomplete="off"
         >
@@ -65,6 +65,16 @@
           + New Tag
         </el-button>
       </el-form-item>
+      <el-form-item label="难度" prop="level">
+        <el-select v-model="form.category" placeholder="请选择">
+          <el-option
+            v-for="item in levels"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
@@ -96,17 +106,34 @@
       label: '简答题',
     },
   ]
+  const questionLevel = [
+    {
+      value: 1,
+      label: '简单',
+    },
+    {
+      value: 2,
+      label: '中等',
+    },
+    {
+      value: 3,
+      label: '困难',
+    },
+  ]
   export default {
     name: 'TableEdit',
     data() {
       return {
-        options: questionCategory,
+        categorys: questionCategory,
+        levels: questionLevel,
         form: {
-          title: '',
+          id: '',
+          content: '',
           options: ['', '', '', ''],
           answer: '',
           tags: [],
           category: 1,
+          level: 1,
         },
         rules: {
           title: [{ required: true, trigger: 'blur', message: '请输入题目' }],
@@ -126,7 +153,6 @@
         } else {
           this.title = '编辑'
           this.form = Object.assign({}, row)
-          // console.log(this.form)
         }
         this.dialogFormVisible = true
       },
@@ -139,12 +165,25 @@
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            const { msg } = await doEdit(this.form)
-            this.$baseMessage(msg, 'success')
-            this.$refs['form'].resetFields()
-            this.dialogFormVisible = false
-            this.$emit('fetch-data')
-            this.form = this.$options.data().form
+            // const { msg } = await doEdit(this.form)
+            // this.$baseMessage(msg, 'success')
+            // this.$refs['form'].resetFields()
+            // this.dialogFormVisible = false
+            // this.$emit('fetch-data')
+            // this.form = this.$options.data().form
+            this.$axios
+              .post('/manage_center/question/save', this.form)
+              .then((res) => {
+                this.$alert('操作成功', '提示', {
+                  confirmButtonText: '确定',
+                  callback: (action) => {
+                    this.$refs['form'].resetFields()
+                    this.dialogFormVisible = false
+                    this.$emit('fetch-data')
+                    this.form = this.$options.data().form
+                  },
+                })
+              })
           } else {
             return false
           }
