@@ -23,7 +23,11 @@
       <el-form-item label="题目" prop="content">
         <el-input v-model.trim="form.content" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="选项" prop="options">
+      <el-form-item
+        v-if="[1, 2].includes(form.category)"
+        label="选项"
+        prop="options"
+      >
         <el-input
           v-for="(option, index) in form.options"
           :key="index"
@@ -35,7 +39,15 @@
         </el-input>
       </el-form-item>
       <el-form-item label="答案" prop="answer">
-        <el-input v-model.trim="form.answer" autocomplete="off"></el-input>
+        <el-radio-group v-if="form.category == 3" v-model="form.answer">
+          <el-radio label="A">对</el-radio>
+          <el-radio label="B">错</el-radio>
+        </el-radio-group>
+        <el-input
+          v-else
+          v-model.trim="form.answer"
+          autocomplete="off"
+        ></el-input>
       </el-form-item>
       <el-form-item label="知识点" prop="tags">
         <el-tag
@@ -66,7 +78,7 @@
         </el-button>
       </el-form-item>
       <el-form-item label="难度" prop="level">
-        <el-select v-model="form.category" placeholder="请选择">
+        <el-select v-model="form.level" placeholder="请选择">
           <el-option
             v-for="item in levels"
             :key="item.value"
@@ -208,7 +220,6 @@
         this.inputTagVisible = false
         this.inputTagValue = ''
       },
-
       categoryChange() {
         let category = this.form.category
         if (category == 1 || category == 2) {

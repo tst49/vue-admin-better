@@ -170,7 +170,7 @@
   const dataList = {
     single: [
       {
-        no: 11,
+        no: 1,
         id: 1001,
         content: '1+1=?',
         options: ['1', '2', '3', '4'],
@@ -179,7 +179,7 @@
         category: 1,
       },
       {
-        no: 222,
+        no: 2,
         id: 1002,
         content: '1+2=?',
         options: ['1', '2', '3', '4'],
@@ -261,7 +261,7 @@
     ],
     multiple: [
       {
-        no: 1,
+        no: 7,
         id: 1001,
         content: '1+1=?',
         options: ['1', '2', '3', '4'],
@@ -270,7 +270,7 @@
         category: 2,
       },
       {
-        no: 1,
+        no: 8,
         id: 1001,
         content: '1+1=?',
         options: ['1', '2', '3', '4'],
@@ -279,7 +279,7 @@
         category: 2,
       },
       {
-        no: 3,
+        no: 9,
         id: 1003,
         content: '1+3=?',
         options: ['1', '2', '3', '4'],
@@ -288,7 +288,7 @@
         category: 2,
       },
       {
-        no: 4,
+        no: 10,
         id: 1004,
         content: '1+4=?',
         options: ['1', '2', '3', '4'],
@@ -297,7 +297,7 @@
         category: 2,
       },
       {
-        no: 5,
+        no: 11,
         id: 1005,
         content: '1+5=?',
         options: ['1', '2', '3', '4'],
@@ -306,7 +306,7 @@
         category: 2,
       },
       {
-        no: 6,
+        no: 12,
         id: 1006,
         content: '1+5=?',
         options: ['1', '2', '3', '4'],
@@ -317,7 +317,7 @@
     ],
     judgment: [
       {
-        no: 1,
+        no: 13,
         id: 1001,
         content: '1+1=?',
         options: ['对', '错'],
@@ -326,7 +326,7 @@
         category: 3,
       },
       {
-        no: 2,
+        no: 14,
         id: 1002,
         content: '1+2=?',
         options: ['对', '错'],
@@ -335,7 +335,7 @@
         category: 3,
       },
       {
-        no: 3,
+        no: 15,
         id: 1003,
         content: '1+3=?',
         options: ['对', '错'],
@@ -344,7 +344,7 @@
         category: 3,
       },
       {
-        no: 4,
+        no: 16,
         id: 1004,
         content: '1+4=?',
         options: ['对', '错'],
@@ -353,7 +353,7 @@
         category: 3,
       },
       {
-        no: 5,
+        no: 17,
         id: 1005,
         content: '1+5=?',
         options: ['对', '错'],
@@ -364,7 +364,7 @@
     ],
     blank: [
       {
-        no: 1,
+        no: 18,
         id: 1001,
         content: '1+1=?',
         options: [],
@@ -373,7 +373,7 @@
         category: 4,
       },
       {
-        no: 2,
+        no: 19,
         id: 1002,
         content: '1+2=?',
         options: [],
@@ -382,7 +382,7 @@
         category: 4,
       },
       {
-        no: 3,
+        no: 20,
         id: 1003,
         content: '1+3=?',
         options: [],
@@ -391,7 +391,7 @@
         category: 4,
       },
       {
-        no: 4,
+        no: 21,
         id: 1004,
         content: '1+4=?',
         options: [],
@@ -402,7 +402,7 @@
     ],
     text: [
       {
-        no: 1,
+        no: 22,
         id: 1001,
         content: '1+1=?',
         options: [],
@@ -411,7 +411,7 @@
         category: 5,
       },
       {
-        no: 2,
+        no: 23,
         id: 1002,
         content: '1+2=?',
         options: [],
@@ -420,7 +420,7 @@
         category: 5,
       },
       {
-        no: 3,
+        no: 24,
         id: 1003,
         content: '1+3=?',
         options: [],

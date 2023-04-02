@@ -61,6 +61,10 @@
           </el-checkbox-button>
         </el-checkbox-group>
       </el-row>
+      <el-button type="primary" @click="generatePaper">
+        生成试卷
+        <i class="el-icon-upload el-icon--right"></i>
+      </el-button>
     </el-card>
     <el-card>
       <el-table
@@ -132,14 +136,17 @@
       ></el-pagination>
     </el-card>
     <single-question ref="question"></single-question>
+    <test-paper-preview ref="paperPreview"></test-paper-preview>
   </div>
 </template>
 <script>
   import SingleQuestion from './components/singleQuestion'
+  import TestPaperPreview from './components/testPaperPreview'
   export default {
     name: 'Index',
     components: {
       SingleQuestion,
+      TestPaperPreview,
     },
     filters: {
       statusFilter(status) {
@@ -256,10 +263,10 @@
         this.$axios
           .post('/testing/question/list', this.queryForm)
           .then((res) => {
-            console.log(res)
+            // console.log(res)
             this.list = res.data.data.list
             // this.queryForm.pageNo = res.data.data.current
-            console.log(this.queryForm.pageNo)
+            // console.log(this.queryForm.pageNo)
             this.total = res.data.data.total
           })
           .then(() => {
@@ -268,6 +275,11 @@
       },
       haveTry(row) {
         this.$refs['question'].haveTry(row)
+      },
+      generatePaper() {
+        this.$axios.post('/testing/paper/init', this.queryForm).then((res) => {
+          this.$refs['paperPreview'].paperPreview(null, res.data.data)
+        })
       },
       parseCategory(category) {
         switch (category) {

@@ -61,25 +61,37 @@
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="submit">提 交</el-button>
     </div>
+    <el-divider></el-divider>
+    <!--评论-->
+    <question-answer-result
+      v-show="answerResultVisible"
+      ref="checkAnswer"
+    ></question-answer-result>
   </el-dialog>
 </template>
 
 <script>
+  import QuestionAnswerResult from '../../common/questionAnswerResult'
   export default {
     name: 'SingleQuestion',
+    components: {
+      QuestionAnswerResult,
+    },
     data() {
       return {
         currentQuestion: {
+          id: null,
           content: '',
           options: [],
-          category: 1,
-          level: 1,
+          category: null,
+          level: null,
           answer: [],
         },
         title: '',
         dialogFormVisible: false,
         inputTagVisible: false,
         inputTagValue: '',
+        answerResultVisible: false,
       }
     },
     created() {},
@@ -93,29 +105,26 @@
             },
           })
           .then((res) => {
+            this.currentQuestion.id = res.data.data.id
             this.currentQuestion.content = res.data.data.content
-            this.currentQuestion.answer = res.data.data.answer
+            this.currentQuestion.options = res.data.data.options
+            this.currentQuestion.category = res.data.data.category
           })
         this.dialogFormVisible = true
       },
       close() {
-        this.form = this.$options.data().form
+        this.currentQuestion = this.$options.data().currentQuestion
         this.dialogFormVisible = false
+        this.answerResultVisible = false
         this.$emit('fetch-data')
       },
       submit() {
-        this.$refs['form'].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(this.form)
-            this.$baseMessage(msg, 'success')
-            this.$refs['form'].resetFields()
-            this.dialogFormVisible = false
-            this.$emit('fetch-data')
-            this.form = this.$options.data().form
-          } else {
-            return false
-          }
-        })
+        this.$refs.checkAnswer.checkAnswer(
+          this.currentQuestion.id,
+          this.currentQuestion.answer
+        )
+        // 答题结果
+        this.answerResultVisible = true
       },
     },
   }

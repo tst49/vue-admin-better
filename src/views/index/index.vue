@@ -1,7 +1,7 @@
 <template>
   <div class="index-container">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+      <!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <el-alert v-if="noticeList[0]" :closable="noticeList[0].closable">
           <div
             style="display: flex; align-items: center; justify-content: center"
@@ -18,16 +18,16 @@
             <p v-html="noticeList[0].title"></p>
           </div>
         </el-alert>
-      </el-col>
+      </el-col> -->
       <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
         <el-card shadow="never">
           <div slot="header">
-            <span>访问量</span>
+            <span>学习总时长</span>
           </div>
           <vab-chart autoresize :options="fwl" />
           <div class="bottom">
             <span>
-              日均访问量:
+              日均学习时长:
 
               {{ config1.endVal }}
             </span>
@@ -37,12 +37,12 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
         <el-card shadow="never">
           <div slot="header">
-            <span>授权数</span>
+            <span>近日答题数</span>
           </div>
           <vab-chart autoresize :options="sqs" />
           <div class="bottom">
             <span>
-              总授权数:
+              总答题数:
               {{ config2.endVal }}
             </span>
           </div>
@@ -69,7 +69,7 @@
         </router-link>
       </el-col>
 
-      <el-col :xs="24" :sm="24" :md="24" :lg="11" :xl="11">
+      <!-- <el-col :xs="24" :sm="24" :md="24" :lg="11" :xl="11">
         <el-card class="card" shadow="never">
           <div slot="header">
             <span>依赖信息</span>
@@ -98,14 +98,14 @@
             <a @click="handleChangeTheme">
               <el-button type="danger">修改主题和布局</el-button>
             </a>
-            <!--  <el-popover placement="top" width="250" trigger="hover">
+            <el-popover placement="top" width="250" trigger="hover">
               <p>谢谢您愿意支持开源，加群获取文档，群内提供基础模板</p>
               <el-image :src="require('@/assets/ewm.png')"></el-image>
               <a slot="reference" target="_blank">
                 <el-button type="warning">文档</el-button>
               </a>
             </el-popover> -->
-          </div>
+      <!-- </div>
         </el-card>
 
         <el-card shadow="never">
@@ -128,9 +128,9 @@
           <el-alert :closable="false" :title="userAgent" type="info"></el-alert>
           <br />
         </el-card>
-      </el-col>
+      </el-col> -->
 
-      <el-col :xs="24" :sm="24" :md="13" :lg="13" :xl="13">
+      <!-- <el-col :xs="24" :sm="24" :md="13" :lg="13" :xl="13">
         <el-card class="card" shadow="never">
           <div slot="header">
             <span>更新日志</span>
@@ -148,7 +148,7 @@
         </el-card>
         <plan></plan>
         <version-information></version-information>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>
@@ -166,8 +166,8 @@
     name: 'Index',
     components: {
       VabChart,
-      Plan,
-      VersionInformation,
+      // Plan,
+      // VersionInformation,
     },
     data() {
       return {
@@ -434,44 +434,44 @@
         iconList: [
           {
             icon: 'video',
-            title: '视频播放器',
+            title: '仿真算法视频',
             link: '/vab/player',
             color: '#ffc069',
           },
           {
             icon: 'table',
-            title: '表格',
+            title: '资料库',
             link: '/vab/table/comprehensiveTable',
             color: '#5cdbd3',
           },
           {
             icon: 'laptop-code',
-            title: '源码',
+            title: '刷题',
             link: 'https://github.com/chuzhixin/vue-admin-better',
             color: '#b37feb',
           },
           {
             icon: 'book',
-            title: '书籍',
+            title: '试卷库',
             link: '',
             color: '#69c0ff',
           },
           {
             icon: 'bullhorn',
-            title: '公告',
+            title: '我的作业',
             link: '',
             color: '#ff85c0',
           },
           {
             icon: 'gift',
-            title: '礼物',
+            title: '我的积分',
             link: '',
             color: '#ffd666',
           },
 
           {
             icon: 'balance-scale-left',
-            title: '公平的世界',
+            title: '答题详情',
             link: '',
             color: '#ff9c6e',
           },
