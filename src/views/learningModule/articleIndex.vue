@@ -1,27 +1,34 @@
 <template>
   <div class="mcontaner">
-    <Header></Header>
-    <Menu></Menu>
-
+    <router-link
+      type="success"
+      :to="{ name: 'ArticleEdit' }"
+      style="font-size: 15pt"
+    >
+      上传资料
+    </router-link>
     <div class="block">
       <el-timeline>
         <el-timeline-item
-          v-for="(blog, index) in blogs"
+          v-for="(article, index) in articles"
           :key="index"
-          :timestamp="blog.gmtCreate"
+          :timestamp="article.createTime"
           placement="top"
         >
           <el-card>
-            <el-tag type="info" class="typeTag" color="lightgreen"></el-tag>
+            <el-tag v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
             <h4 style="font-size: 15pt">
               <router-link
-                :to="{ name: 'BlogDetail', params: { blogId: blog.id } }"
+                :to="{
+                  name: 'ArticleDetail',
+                  params: { articleId: article.id },
+                }"
               >
-                {{ blog.title }}
+                {{ article.title }}
               </router-link>
             </h4>
-            <p>最近更新于：{{ blog.gmtModified }}</p>
-            <p>文章摘要：{{ blog.description }}</p>
+            <p>最近更新于：{{ article.modifyTime }}</p>
+            <p>文章摘要：{{ article.description }}</p>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -29,8 +36,8 @@
       <el-pagination
         class="mpage"
         background
-        layout="prev, total,pager, next"
-        :current-page="currentPage"
+        layout="prev, total, pager, next"
+        :current-page="pageNo"
         :page-size="pageSize"
         :total="total"
         @current-change="page"
@@ -41,36 +48,28 @@
 
 <script>
   export default {
-    components: { Header, Menu },
     data() {
       return {
-        blogs: {},
-        currentPage: 1,
+        articles: [],
+        pageNo: 1,
         total: 0,
         pageSize: 5,
       }
     },
-    // watch: {
-    //   '$route'(to, from) {
-    //     this.pageByType(1)
-    //
-    //   }
-    // },
     created() {
       this.page(1)
     },
     methods: {
-      page(currentPage) {
+      page() {
         this.$axios
-          .get('/blogs', {
+          .get('/learning/article/overview/list', {
             params: {
-              currentPage: currentPage,
+              pageNo: this.pageNo,
+              pageSize: this.pageSize,
             },
           })
           .then((res) => {
-            console.log(res)
-            this.blogs = res.data.data.list
-            this.currentPage = res.data.data.current
+            this.articles = res.data.data.list
             this.total = res.data.data.total
           })
       },

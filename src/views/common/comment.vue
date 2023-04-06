@@ -3,8 +3,11 @@
   <div class="comment-body">
     <!--评论表单-->
     <CommentForm
-      v-if="parentCommentId === -1"
+      v-if="parentCommentId === '-1'"
       :root-comment-id="-1"
+      :parent-comment-id="-1"
+      :data-category="dataCategory"
+      :data-id="dataId"
       @parentEvent="toClick"
     ></CommentForm>
     <h3 class="ui-dividing-header" style="color: orange">
@@ -68,6 +71,8 @@
             v-if="parentCommentId === reply.id"
             :root-comment-id="comment.id"
             :parent-comment-id="reply.id"
+            :data-category="dataCategory"
+            :data-id="dataId"
             @parentEvent="toClick"
           />
         </div>
@@ -77,6 +82,8 @@
         v-if="parentCommentId === comment.id"
         :root-comment-id="comment.id"
         :parent-comment-id="comment.id"
+        :data-category="dataCategory"
+        :data-id="dataId"
         @parentEvent="toClick"
       />
     </div>
@@ -105,7 +112,7 @@
         dataId: null,
         commentCount: [],
         comments: [],
-        parentCommentId: -1,
+        parentCommentId: null,
         pageNo: 1,
         total: 0,
         pageSize: 8,
@@ -119,14 +126,14 @@
       },
       //接受子组件信息，将评论表单归位
       toClick() {
-        this.parentCommentId = -1
+        this.parentCommentId = '-1'
       },
       showComment(dataCategory, dataId) {
         this.dataCategory = dataCategory
         this.dataId = dataId
-        console.log(dataCategory)
         this.getCommentCount()
         this.getPageComments(1)
+        this.parentCommentId = '-1'
       },
       //获取评论
       getPageComments(pageNo) {
@@ -136,17 +143,15 @@
               dataCategory: this.dataCategory,
               dataId: this.dataId,
               pageNo: pageNo,
+              pageSize: this.pageSize,
             },
           })
           .then((res) => {
             console.log(res)
             this.comments = res.data.data.list
-            this.pageNo = res.data.data.current
             this.total = res.data.data.total
-            this.pageSize = res.data.data.size
           })
       },
-
       getCommentCount() {
         this.$axios
           .get('/comment/count', {

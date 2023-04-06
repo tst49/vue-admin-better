@@ -62,20 +62,40 @@ export const asyncRoutes = [
     meta: { title: '学习', icon: 'box-open' },
     children: [
       {
-        path: 'onlineAlgorithm',
+        path: '/onlineAlgorithm',
         name: 'OnlineAlgorithm',
-        component: () => import('@/views/personalCenter/info'),
+        component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '在线算法',
           permissions: ['admin', 'editor'],
         },
       },
       {
-        path: 'literature',
-        name: 'Literature',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: '/article/index',
+        name: 'ArticleIndex',
+        component: () => import('@/views/learningModule/articleIndex'),
         meta: {
           title: '资料库',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: '/article/edit',
+        name: 'ArticleEdit',
+        hidden: true,
+        component: () => import('@/views/learningModule/articleEdit'),
+        meta: {
+          title: '资料库编辑',
+          permissions: ['admin'],
+        },
+      },
+      {
+        path: '/article/detail',
+        name: 'ArticleDetail',
+        hidden: true,
+        component: () => import('@/views/learningModule/articleDetail'),
+        meta: {
+          title: '资料库详情',
           permissions: ['admin'],
         },
       },
@@ -110,7 +130,7 @@ export const asyncRoutes = [
       {
         path: 'paper',
         name: 'Paper',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/testingModule/testPaperIndex'),
         meta: {
           title: '生成试卷',
           permissions: ['admin'],
@@ -126,7 +146,7 @@ export const asyncRoutes = [
       {
         path: 'index',
         name: 'Index',
-        component: () => import('@/views/index/index'),
+        component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '积分榜',
           icon: 'home',

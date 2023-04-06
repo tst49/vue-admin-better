@@ -71,7 +71,7 @@
 </template>
 
 <script>
-  import QuestionAnswerResult from '../../common/questionAnswerResult'
+  import QuestionAnswerResult from './questionAnswerResult'
   export default {
     name: 'SingleQuestion',
     components: {

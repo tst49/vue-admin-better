@@ -26,7 +26,7 @@
       ></el-input>
 
       <el-row :gutter="20">
-        <el-col :span="6">
+        <!-- <el-col :span="6">
           <el-form-item prop="nickname">
             <el-popover
               ref="nicknamePopover"
@@ -63,7 +63,7 @@
               <i slot="prefix" class="el-input__icon el-icon-message"></i>
             </el-input>
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :offset="1" :span="5">
           <el-form-item>
             <!-- 接口节流  -->
@@ -87,12 +87,20 @@
     name: 'CommentForm',
     props: {
       rootCommentId: {
+        type: String,
+        default: '-1',
+      },
+      parentCommentId: {
+        type: String,
+        default: '-1',
+      },
+      dataCategory: {
         type: Number,
         default: -1,
       },
-      parentCommentId: {
-        type: Number,
-        default: -1,
+      dataId: {
+        type: String,
+        default: '-1',
       },
     },
     data() {
@@ -107,15 +115,11 @@
       }
       return {
         commentForm: {
-          blogId: 0,
-          parentId: this.rootCommentId,
-          nickname: '',
-          avatar: '',
+          dataCategory: this.dataCategory,
+          dataId: this.dataId,
+          rootId: this.rootCommentId,
+          parentId: this.parentCommentId,
           content: '',
-          isAdminComment: false,
-          email: '',
-          ip: '0.0.0.0',
-          qq: '',
         },
         rules: {
           nickname: [
@@ -135,29 +139,8 @@
         },
       }
     },
-    watch: {
-      //监控props 但是好像没用额， 因为为在父类中没改动
-      // rootCommentId: function (newVal) {
-      //   this.commentForm.parentCommentId = newVal
-      //   console.log(JSON.stringify(this.commentForm))
-      // }
-    },
-    created() {
-      // if (this.$route.params.blogId) {
-      //   this.commentForm.blogId = this.$route.params.blogId
-      // } else {
-      //   alert('error')
-      //   return false
-      // }
-      // if (this.$store.getters.getUser) {
-      //   if (
-      //     this.$store.getters.getUser.role === 'owner' ||
-      //     this.$store.getters.getUser.role === 'admin'
-      //   ) {
-      //     this.commentForm.isAdminComment = true
-      //   }
-      // }
-    },
+    watch: {},
+    created() {},
     methods: {
       //设计哈希函数
       //1>将字符串转成比较大的数字：hashCode
@@ -202,10 +185,10 @@
       },
       //提交之前检查头像地址是否为空
       beforePost() {
-        //console.log("beforePost===================================================================")
-        if (this.commentForm.avatar == '') {
-          this.getQQinfo()
-        }
+        // //console.log("beforePost===================================================================")
+        // if (this.commentForm.avatar == '') {
+        //   this.getQQinfo()
+        // }
       },
       //提交评论
       postForm() {
@@ -223,12 +206,12 @@
             //表单校验
             this.$refs.formRef.validate((valid) => {
               if (valid) {
-                console.log(JSON.stringify(this.commentForm))
+                // console.log(JSON.stringify(this.commentForm))
                 //判断是否为管理员(博主)
-                if (this.commentForm.isAdminComment) {
-                  this.commentForm.avatar =
-                    'https://i.postimg.cc/kM84cfrY/QQ-20220403192249.jpg'
-                }
+                // if (this.commentForm.isAdminComment) {
+                //   this.commentForm.avatar =
+                //     'https://i.postimg.cc/kM84cfrY/QQ-20220403192249.jpg'
+                // }
                 //console.log("before post==========================================="+this.commentForm)
                 this.$axios
                   .post('/comment/add', this.commentForm)
@@ -238,10 +221,14 @@
                       this.$alert('发送成功', '提示', {
                         confirmButtonText: '确定',
                         callback: (action) => {
-                          location.reload()
+                          this.$parent.showComment(
+                            this.dataCategory,
+                            this.dataId
+                          )
                         },
                       })
                     } else {
+                      alert('失败')
                     }
                   })
               } else {

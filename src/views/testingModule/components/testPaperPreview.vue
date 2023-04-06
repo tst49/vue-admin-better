@@ -5,6 +5,8 @@
     width="900px"
     @close="close"
   >
+    <p>试卷知识点主要发布：</p>
+    <el-tag v-for="tag in testPaperTags" :key="tag">{{ tag }}</el-tag>
     <el-row v-if="questionList.single.length > 0">
       <el-divider content-position="center">单选题</el-divider>
       <el-row v-for="question in questionList.single" :key="question.id">
@@ -386,7 +388,12 @@
     name: 'TestPaperPreview',
     data() {
       return {
-        questionIds: [],
+        testPaperVO: {
+          id: null,
+          questionIds: [],
+          title: '',
+          testPaperTags: [],
+        },
         questionList: {
           single: [],
           multiple: [],
@@ -394,7 +401,6 @@
           blank: [],
           text: [],
         },
-        title: '',
         dialogFormVisible: false,
         inputTagVisible: false,
         inputTagValue: '',
@@ -402,16 +408,13 @@
     },
     created() {},
     methods: {
-      paperPreview(paparId, data) {
+      paperPreview(data) {
         // console.log('paperPreview in')
-        if (paparId == null) {
-          this.title = '生成试卷预览'
-          this.questionIds = data.questionIds
-          this.questionList = data.testPaper
-          // console.log('data init')
-        } else {
-          //axios通过id获取
-        }
+        this.testPaperVO.id = data.testPaperId
+        this.testPaperVO.title = data.testPaperTitle
+        this.testPaperVO.testPaperTags = data.testPaperTags
+        this.testPaperVO.questionIds = data.questionIds
+        this.questionList = data.testPaper
         this.dialogFormVisible = true
       },
       close() {
@@ -424,11 +427,15 @@
           cancelButtonText: '取消',
         })
           .then(({ value }) => {
-            // ids入库生成
-            this.$message({
-              type: 'success',
-              message: '试卷生成完成',
-            })
+            this.testPaperVO.testPaperTitle = value
+            this.$axios
+              .post('/testing/paper/save', this.testPaperVO)
+              .then((res) => {
+                this.$message({
+                  type: 'success',
+                  message: '试卷生成完成',
+                })
+              })
           })
           .catch(() => {
             this.$message({

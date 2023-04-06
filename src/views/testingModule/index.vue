@@ -278,7 +278,7 @@
       },
       generatePaper() {
         this.$axios.post('/testing/paper/init', this.queryForm).then((res) => {
-          this.$refs['paperPreview'].paperPreview(null, res.data.data)
+          this.$refs['paperPreview'].paperPreview(res.data.data)
         })
       },
       parseCategory(category) {
