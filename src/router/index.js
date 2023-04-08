@@ -59,12 +59,12 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'Learning',
     alwaysShow: true,
-    meta: { title: '学习', icon: 'box-open' },
+    meta: { title: '在线学习', icon: 'box-open' },
     children: [
       {
-        path: '/onlineAlgorithm',
-        name: 'OnlineAlgorithm',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: '/online/video',
+        name: 'OnlineVideo',
+        component: () => import('@/views/learningModule/videoDetail'),
         meta: {
           title: '在线算法',
           permissions: ['admin', 'editor'],
@@ -107,32 +107,33 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'Testing',
     alwaysShow: true,
-    meta: { title: '题库', icon: 'box-open' },
+    meta: { title: '刷题学习', icon: 'box-open' },
     children: [
       {
-        path: 'all',
-        name: 'All',
+        path: 'paper',
+        name: 'Paper',
+        hidden: true,
         component: () => import('@/views/testingModule/testPaper'),
         meta: {
-          title: '全部题目',
+          title: '试卷作答页面',
           permissions: ['admin', 'editor'],
         },
       },
       {
-        path: 'spesial',
-        name: 'Spesial',
-        component: () => import('@/views/testingModule/index'),
+        path: 'question/index',
+        name: 'QuestionIndex',
+        component: () => import('@/views/testingModule/questionIndex'),
         meta: {
-          title: '专项练习',
+          title: '题库',
           permissions: ['admin'],
         },
       },
       {
-        path: 'paper',
-        name: 'Paper',
+        path: 'paper/index',
+        name: 'PaperIndex',
         component: () => import('@/views/testingModule/testPaperIndex'),
         meta: {
-          title: '生成试卷',
+          title: '试卷库',
           permissions: ['admin'],
         },
       },
@@ -273,9 +274,9 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'literatureManagement',
-        name: 'LiteratureManagement',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: 'articleManagement',
+        name: 'ArticleManagement',
+        component: () => import('@/views/managementModule/articleManagement'),
         meta: {
           title: '资料库管理',
           permissions: ['admin'],
@@ -291,9 +292,9 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'discussManagement',
-        name: 'DiscussManagement',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: 'commentManagement',
+        name: 'CommentManagement',
+        component: () => import('@/views/managementModule/commentManagement'),
         meta: {
           title: '讨论区管理',
           permissions: ['admin'],

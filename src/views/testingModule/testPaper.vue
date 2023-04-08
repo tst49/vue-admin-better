@@ -104,7 +104,7 @@
       <!-- 单选或判断 -->
       <el-radio-group
         v-if="[1, 3].includes(currentQuestion.category)"
-        v-model="currentQuestion.answer[0]"
+        v-model="currentQuestion.answer"
       >
         <el-row :gutter="20">
           <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
@@ -150,16 +150,21 @@
       <!-- 填空或简答 -->
       <el-input
         v-else
-        v-model="currentQuestion.answer[0]"
+        v-model="currentQuestion.answer"
         type="textarea"
         :rows="20"
         placeholder="请输入内容"
       ></el-input>
       <el-divider></el-divider>
-      <el-button type="primary" icon="el-icon-arrow-left" plain>
+      <el-button
+        type="primary"
+        icon="el-icon-arrow-left"
+        plain
+        @click="previous"
+      >
         上一题
       </el-button>
-      <el-button type="primary" plain>
+      <el-button type="primary" plain @click="next">
         下一题
         <i class="el-icon-arrow-right el-icon--right"></i>
       </el-button>
@@ -167,270 +172,6 @@
   </div>
 </template>
 <script>
-  const dataList = {
-    single: [
-      {
-        no: 1,
-        id: 1001,
-        content: '1+1=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      {
-        no: 2,
-        id: 1002,
-        content: '1+2=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      {
-        no: 3,
-        id: 1003,
-        content: '1+3=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      {
-        no: 4,
-        id: 1004,
-        content: '1+4=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      {
-        no: 5,
-        id: 1005,
-        content: '1+5=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      {
-        no: 6,
-        id: 1006,
-        content: '1+6=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 1,
-      },
-      // {
-      //   no: 7,
-      //   id: 1007,
-      //   content: '1+7=?',
-      //   options: ['1', '2', '3', '4'],
-      //   show: 'success',
-      // },
-      // {
-      //   no: 8,
-      //   id: 1008,
-      //   content: '1+8=?',
-      //   options: ['1', '2', '3', '4'],
-      //   show: 'success',
-      // },
-      // {
-      //   no: 9,
-      //   id: 1009,
-      //   content: '1+9=?',
-      //   options: ['1', '2', '3', '4'],
-      //   show: 'success',
-      // },
-      // {
-      //   no: 10,
-      //   id: 1010,
-      //   content: '1+10=?',
-      //   options: ['1', '2', '3', '4'],
-      //   show: 'success',
-      // },
-      // {
-      //   no: 11,
-      //   id: 1011,
-      //   content: '1+11=?',
-      //   options: ['1', '2', '3', '4'],
-      //   show: 'success',
-      // },
-    ],
-    multiple: [
-      {
-        no: 7,
-        id: 1001,
-        content: '1+1=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-      {
-        no: 8,
-        id: 1001,
-        content: '1+1=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-      {
-        no: 9,
-        id: 1003,
-        content: '1+3=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-      {
-        no: 10,
-        id: 1004,
-        content: '1+4=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-      {
-        no: 11,
-        id: 1005,
-        content: '1+5=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-      {
-        no: 12,
-        id: 1006,
-        content: '1+5=?',
-        options: ['1', '2', '3', '4'],
-        show: '',
-        answer: [],
-        category: 2,
-      },
-    ],
-    judgment: [
-      {
-        no: 13,
-        id: 1001,
-        content: '1+1=?',
-        options: ['对', '错'],
-        show: '',
-        answer: [],
-        category: 3,
-      },
-      {
-        no: 14,
-        id: 1002,
-        content: '1+2=?',
-        options: ['对', '错'],
-        show: '',
-        answer: [],
-        category: 3,
-      },
-      {
-        no: 15,
-        id: 1003,
-        content: '1+3=?',
-        options: ['对', '错'],
-        show: '',
-        answer: [],
-        category: 3,
-      },
-      {
-        no: 16,
-        id: 1004,
-        content: '1+4=?',
-        options: ['对', '错'],
-        show: '',
-        answer: [],
-        category: 3,
-      },
-      {
-        no: 17,
-        id: 1005,
-        content: '1+5=?',
-        options: ['对', '错'],
-        show: '',
-        answer: [],
-        category: 3,
-      },
-    ],
-    blank: [
-      {
-        no: 18,
-        id: 1001,
-        content: '1+1=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 4,
-      },
-      {
-        no: 19,
-        id: 1002,
-        content: '1+2=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 4,
-      },
-      {
-        no: 20,
-        id: 1003,
-        content: '1+3=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 4,
-      },
-      {
-        no: 21,
-        id: 1004,
-        content: '1+4=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 4,
-      },
-    ],
-    text: [
-      {
-        no: 22,
-        id: 1001,
-        content: '1+1=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 5,
-      },
-      {
-        no: 23,
-        id: 1002,
-        content: '1+2=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 5,
-      },
-      {
-        no: 24,
-        id: 1003,
-        content: '1+3=?',
-        options: [],
-        show: '',
-        answer: [],
-        category: 5,
-      },
-    ],
-  }
-
   export default {
     name: 'Test',
     data() {
@@ -440,7 +181,7 @@
           no: 1,
           content: '',
           options: [],
-          answer: '',
+          answer: [],
         },
         questionList: {
           single: [],
@@ -449,22 +190,27 @@
           blank: [],
           text: [],
         },
+        totalNum: 0,
       }
     },
     created() {
       const testPaperId = this.$route.query.id
-      console.log(testPaperId)
       this.init(testPaperId)
     },
     mounted() {},
     methods: {
       init(testPaperId) {
-        console.log('init:' + testPaperId)
+        // console.log('init:' + testPaperId)
         this.$axios
-          .get('/test')
+          .get('/testing/paper/single', {
+            params: {
+              testPaperId: testPaperId,
+            },
+          })
           .then((res) => {
-            console.log(dataList)
-            this.questionList = dataList
+            console.log(res)
+            this.questionList = res.data.data.testPaper
+            this.totalNum = res.data.data.questionIds.length
           })
           .then(() => {
             console.log(this.questionList)
@@ -481,6 +227,48 @@
               this.currentQuestion = this.questionList.text[0]
             }
           })
+      },
+      previous() {
+        if (this.currentQuestion.no > 1) {
+          this.jumpByNo(this.currentQuestion.no - 1)
+        }
+      },
+      next() {
+        if (this.currentQuestion.no < this.totalNum) {
+          this.jumpByNo(this.currentQuestion.no + 1)
+        }
+      },
+      jumpByNo(no) {
+        for (let q of this.questionList.single) {
+          if (q.no == no) {
+            this.jump(q)
+            return
+          }
+        }
+        for (let q of this.questionList.multiple) {
+          if (q.no == no) {
+            this.jump(q)
+            return
+          }
+        }
+        for (let q of this.questionList.judgment) {
+          if (q.no == no) {
+            this.jump(q)
+            return
+          }
+        }
+        for (let q of this.questionList.blank) {
+          if (q.no == no) {
+            this.jump(q)
+            return
+          }
+        }
+        for (let q of this.questionList.text) {
+          if (q.no == no) {
+            this.jump(q)
+            return
+          }
+        }
       },
       jump(question) {
         if (this.currentQuestion.answer != '') {

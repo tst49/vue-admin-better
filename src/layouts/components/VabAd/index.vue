@@ -13,11 +13,11 @@
         <a target="_blank" :href="item.url">{{ item.title }}</a>
       </el-carousel-item>
     </el-carousel> -->
-    <el-button type="danger">
+    <!-- <el-button type="danger">
       <router-link :to="{ path: '/testing/all', query: { id: 10086 } }">
         testing btn
       </router-link>
-    </el-button>
+    </el-button> -->
   </div>
 </template>
 <script>

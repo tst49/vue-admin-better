@@ -115,7 +115,10 @@
     <!-- 操作面板 -->
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="submit">提 交</el-button>
+      <el-button v-if="testPaperVO.id == null" type="primary" @click="submit">
+        提 交
+      </el-button>
+      <el-button v-else type="primary" @click="tryAnswer">作 答</el-button>
     </div>
   </el-dialog>
 </template>
@@ -441,6 +444,30 @@
             this.$message({
               type: 'info',
               message: '试卷生成取消',
+            })
+          })
+      },
+      tryAnswer() {
+        this.$confirm(
+          '答题<strong style="color: red">限时</strong>60分钟，请安排时间认真作答',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            dangerouslyUseHTMLString: true,
+          }
+        )
+          .then(() => {
+            this.$router.push({
+              path: '/testing/paper',
+              query: { id: this.testPaperVO.id },
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消作答',
             })
           })
       },
