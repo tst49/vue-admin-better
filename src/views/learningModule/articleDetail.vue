@@ -79,8 +79,6 @@
     },
     methods: {
       async showComment(category, articleId) {
-        console.log('showcomment in')
-
         this.$refs.comment.showComment(category, articleId)
         this.commentVisible = true
       },

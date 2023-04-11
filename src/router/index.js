@@ -64,7 +64,7 @@ export const asyncRoutes = [
       {
         path: '/online/video',
         name: 'OnlineVideo',
-        component: () => import('@/views/learningModule/videoDetail'),
+        component: () => import('@/views/learningModule/videoIndex'),
         meta: {
           title: '在线算法',
           permissions: ['admin', 'editor'],
@@ -97,6 +97,16 @@ export const asyncRoutes = [
         meta: {
           title: '资料库详情',
           permissions: ['admin'],
+        },
+      },
+      {
+        path: '/video/detail',
+        name: 'VideoDetail',
+        hidden: true,
+        component: () => import('@/views/learningModule/videoDetail'),
+        meta: {
+          title: '在线算法详情',
+          permissions: ['admin', 'editor'],
         },
       },
     ],
