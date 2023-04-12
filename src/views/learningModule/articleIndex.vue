@@ -20,8 +20,8 @@
             <h4 style="font-size: 15pt">
               <router-link
                 :to="{
-                  name: 'ArticleDetail',
-                  params: { articleId: article.id },
+                  path: '/article/detail',
+                  query: { articleId: article.id },
                 }"
               >
                 {{ article.title }}

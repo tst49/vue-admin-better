@@ -2,8 +2,8 @@
   <el-dialog
     :before-close="handleClose"
     :close-on-click-modal="false"
-    :title="title"
-    :visible.sync="dialogFormVisible"
+    :title="help.title"
+    :visible.sync="help.dialogFormVisible"
     width="909px"
   >
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -20,9 +20,9 @@
             :action="action"
             :auto-upload="false"
             :close-on-click-modal="false"
-            :data="data"
-            :file-list="fileList"
-            :headers="headers"
+            :data="help.data"
+            :file-list="help.fileList"
+            :headers="help.headers"
             :limit="1"
             :multiple="true"
             :on-error="handleError"
@@ -36,12 +36,12 @@
           >
             <i slot="trigger" class="el-icon-plus"></i>
             <el-dialog
-              :visible.sync="dialogVisible"
+              :visible.sync="help.dialogVisible"
               append-to-body
               title="查看大图"
             >
               <div>
-                <img :src="dialogImageUrl" alt="" width="100%" />
+                <img :src="help.dialogImageUrl" alt="" width="100%" />
               </div>
             </el-dialog>
           </el-upload>
@@ -65,9 +65,9 @@
           {{ tag }}
         </el-tag>
         <el-input
-          v-if="inputTagVisible"
+          v-if="help.inputTagVisible"
           ref="saveTagInput"
-          v-model="inputTagValue"
+          v-model="help.inputTagValue"
           class="input-new-tag"
           size="small"
           @keyup.enter.native="handleInputConfirm"
@@ -95,10 +95,10 @@
             :action="action"
             :auto-upload="false"
             :close-on-click-modal="false"
-            :data="data"
+            :data="help.data"
             :limit="1"
-            :file-list="videoList"
-            :headers="headers"
+            :file-list="help.videoList"
+            :headers="help.headers"
             :on-error="handleVideoError"
             :on-progress="handleProgress"
             :on-success="handleVideoSuccess"
@@ -110,8 +110,8 @@
             list-type="picture-card"
           >
             <video
-              v-if="videoDialogVisible"
-              :src="dialogVideoUrl"
+              v-if="help.videoDialogVisible"
+              :src="help.dialogVideoUrl"
               class="avatar video-avatar"
               controls="controls"
             >
@@ -130,7 +130,7 @@
     >
       <el-button type="primary" @click="handleClose">关闭</el-button>
       <el-button
-        :loading="loading"
+        :loading="help.loading"
         size="small"
         style="margin-left: 10px"
         type="success"
@@ -148,20 +148,23 @@
   export default {
     data() {
       return {
-        title: '视频上传',
-        dialogFormVisible: false,
-        data: {},
-        loading: false,
-        dialogVisible: false,
-        videoDialogVisible: false,
         action: action,
-        headers: {},
-        fileList: [],
-        videoList: [],
-        picture: 'picture',
-        dialogImageUrl: '',
-        dialogVideoUrl: '',
-
+        help: {
+          title: '视频上传',
+          data: {},
+          loading: false,
+          dialogFormVisible: false,
+          dialogVisible: false,
+          videoDialogVisible: false,
+          headers: {},
+          fileList: [],
+          videoList: [],
+          picture: 'picture',
+          dialogImageUrl: '',
+          dialogVideoUrl: '',
+          inputTagVisible: false,
+          inputTagValue: '',
+        },
         form: {
           title: '',
           thumbnail: '',
@@ -169,8 +172,7 @@
           tags: [],
           description: '',
         },
-        inputTagVisible: false,
-        inputTagValue: '',
+
         rules: {
           title: [
             { required: true, message: '请输入标题', trigger: 'blur' },
@@ -203,9 +205,9 @@
                 confirmButtonText: '确定',
                 callback: (action) => {
                   this.$refs['form'].resetFields()
-                  this.dialogFormVisible = false
-                  this.$emit('fetch-data')
-                  this.form = this.$options.data().form
+                  this.help = this.$options.data().help
+                  this.help.dialogFormVisible = false
+                  this.$parent.fetchData()
                 },
               })
             })
@@ -228,37 +230,37 @@
         }
       },
       handleVideoChange(file, videoList) {
-        this.dialogVideoUrl = file.url
-        this.videoDialogVisible = true
+        this.help.dialogVideoUrl = file.url
+        this.help.videoDialogVisible = true
       },
       handleVideoRemove(file, videoList) {
-        this.videoDialogVisible = false
+        this.help.videoDialogVisible = false
       },
       //
       handleProgress(event, file, fileList) {
-        this.loading = true
+        this.help.loading = true
       },
       handleSuccess(response, file, fileList) {
         this.form.thumbnail = response.data
         this.$baseMessage(`上传视频封面成功！`, 'success')
-        this.loading = false
+        this.help.loading = false
       },
       handleError(err, file, fileList) {
         this.$baseMessage(`上传视频封面失败！`, 'error')
-        this.loading = false
+        this.help.loading = false
       },
       handleVideoSuccess(response, file, fileList) {
         this.form.videoUrl = response.data
         this.$baseMessage(`上传视频成功！`, 'success')
-        this.loading = false
+        this.help.loading = false
       },
       handleVideoError(err, file, fileList) {
         this.$baseMessage(`上传视频失败！`, 'error')
-        this.loading = false
+        this.help.loading = false
       },
       handlePreview(file) {
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
+        this.help.dialogImageUrl = file.url
+        this.help.dialogVisible = true
       },
       handleExceed(files, fileList) {
         this.$baseMessage(`只能选择一张封面哦`, 'error')
@@ -267,15 +269,12 @@
         this.$baseMessage(`只能上传一个视频哦`, 'error')
       },
       handleShow(data) {
-        this.title = '视频上传'
-        this.data = data
-        this.dialogFormVisible = true
+        this.help.title = '视频上传'
+        this.help.data = data
+        this.help.dialogFormVisible = true
       },
       handleClose() {
-        this.fileList = []
-        this.videoList = []
-        this.picture = 'picture'
-        this.dialogFormVisible = false
+        this.help = this.$options.data().help
         this.$refs['form'].resetFields()
       },
       //
@@ -283,18 +282,18 @@
         this.form.tags.splice(this.form.tags.indexOf(tag), 1)
       },
       showInput() {
-        this.inputTagVisible = true
+        this.help.inputTagVisible = true
         this.$nextTick((_) => {
           this.$refs.saveTagInput.$refs.input.focus()
         })
       },
       handleInputConfirm() {
-        let inputTagValue = this.inputTagValue
+        let inputTagValue = this.help.inputTagValue
         if (inputTagValue) {
           this.form.tags.push(inputTagValue)
         }
-        this.inputTagVisible = false
-        this.inputTagValue = ''
+        this.help.inputTagVisible = false
+        this.help.inputTagValue = ''
       },
     },
   }

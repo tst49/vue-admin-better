@@ -172,17 +172,11 @@
         this.$refs['form'].resetFields()
         this.form = this.$options.data().form
         this.dialogFormVisible = false
-        this.$emit('fetch-data')
+        this.$parent.fetchData()
       },
       save() {
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            // const { msg } = await doEdit(this.form)
-            // this.$baseMessage(msg, 'success')
-            // this.$refs['form'].resetFields()
-            // this.dialogFormVisible = false
-            // this.$emit('fetch-data')
-            // this.form = this.$options.data().form
             this.$axios
               .post('/manage_center/question/save', this.form)
               .then((res) => {
@@ -191,8 +185,8 @@
                   callback: (action) => {
                     this.$refs['form'].resetFields()
                     this.dialogFormVisible = false
-                    this.$emit('fetch-data')
-                    this.form = this.$options.data().form
+                    this.$parent.fetchData()
+                    // this.form = this.$options.data().form
                   },
                 })
               })

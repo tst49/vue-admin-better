@@ -62,8 +62,8 @@ export const asyncRoutes = [
     meta: { title: '在线学习', icon: 'box-open' },
     children: [
       {
-        path: '/online/video',
-        name: 'OnlineVideo',
+        path: '/video/index',
+        name: 'VideoIndex',
         component: () => import('@/views/learningModule/videoIndex'),
         meta: {
           title: '在线算法',

@@ -34,7 +34,7 @@
         :lg="8"
         :xl="6"
       >
-        <el-card :body-style="{ padding: '0px' }" shadow="always">
+        <el-card :body-style="{ padding: '5px' }" shadow="always">
           <div slot="header">
             <el-tag :type="testPaper.status | statusFilter">
               {{ testPaper.status }}

@@ -56,7 +56,7 @@
     },
     created() {
       const _this = this
-      const articleId = _this.$route.params.articleId
+      const articleId = _this.$route.query.articleId
 
       this.$axios
         .get('/learning/article/detail', {
