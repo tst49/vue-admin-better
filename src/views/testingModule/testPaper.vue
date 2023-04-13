@@ -6,12 +6,16 @@
         <el-tag effect="dark" type="success">已答</el-tag>
         <el-tag effect="dark" type="primary">当前</el-tag>
       </div>
-      <el-row v-if="questionList.single.length > 0">
+      <el-row v-if="paper.questionList.single.length > 0">
         <el-divider content-position="center">单选题</el-divider>
         <el-col
-          v-for="question in questionList.single"
+          v-for="question in paper.questionList.single"
           :key="question.id"
-          :span="6"
+          :xs="25"
+          :sm="5"
+          :md="5"
+          :lg="5"
+          :xl="5"
         >
           <el-button
             style="width: 90%; padding: 10px; margin-bottom: 10px"
@@ -23,12 +27,16 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row v-if="questionList.multiple.length > 0">
+      <el-row v-if="paper.questionList.multiple.length > 0">
         <el-divider content-position="center">多选题</el-divider>
         <el-col
-          v-for="question in questionList.multiple"
+          v-for="question in paper.questionList.multiple"
           :key="question.id"
-          :span="6"
+          :xs="25"
+          :sm="5"
+          :md="5"
+          :lg="5"
+          :xl="5"
         >
           <el-button
             style="width: 90%; padding: 10px; margin-bottom: 10px"
@@ -39,12 +47,16 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row v-if="questionList.judgment.length > 0">
+      <el-row v-if="paper.questionList.judgment.length > 0">
         <el-divider content-position="center">判断题</el-divider>
         <el-col
-          v-for="question in questionList.judgment"
+          v-for="question in paper.questionList.judgment"
           :key="question.id"
-          :span="6"
+          :xs="25"
+          :sm="5"
+          :md="5"
+          :lg="5"
+          :xl="5"
         >
           <el-button
             style="width: 90%; padding: 10px; margin-bottom: 10px"
@@ -55,12 +67,16 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row v-if="questionList.blank.length > 0">
+      <el-row v-if="paper.questionList.blank.length > 0">
         <el-divider content-position="center">填空题</el-divider>
         <el-col
-          v-for="question in questionList.blank"
+          v-for="question in paper.questionList.blank"
           :key="question.id"
-          :span="6"
+          :xs="25"
+          :sm="5"
+          :md="5"
+          :lg="5"
+          :xl="5"
         >
           <el-button
             style="width: 90%; padding: 10px; margin-bottom: 10px"
@@ -71,12 +87,16 @@
           </el-button>
         </el-col>
       </el-row>
-      <el-row v-if="questionList.text.length > 0">
+      <el-row v-if="paper.questionList.text.length > 0">
         <el-divider content-position="center">简答题</el-divider>
         <el-col
-          v-for="question in questionList.text"
+          v-for="question in paper.questionList.text"
           :key="question.id"
-          :span="6"
+          :xs="25"
+          :sm="5"
+          :md="5"
+          :lg="5"
+          :xl="5"
         >
           <el-button
             style="width: 90%; padding: 10px; margin-bottom: 10px"
@@ -91,6 +111,7 @@
       <el-button
         type="danger"
         style="width: 100%; padding: 10px; margin-top: -15px; align=center"
+        @click="submit"
       >
         结束考试
       </el-button>
@@ -104,7 +125,7 @@
       <!-- 单选或判断 -->
       <el-radio-group
         v-if="[1, 3].includes(currentQuestion.category)"
-        v-model="currentQuestion.answer"
+        v-model="currentQuestion.answer[0]"
       >
         <el-row :gutter="20">
           <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
@@ -150,7 +171,7 @@
       <!-- 填空或简答 -->
       <el-input
         v-else
-        v-model="currentQuestion.answer"
+        v-model="currentQuestion.answer[0]"
         type="textarea"
         :rows="20"
         placeholder="请输入内容"
@@ -183,22 +204,54 @@
           options: [],
           answer: [],
         },
-        questionList: {
-          single: [],
-          multiple: [],
-          judgment: [],
-          blank: [],
-          text: [],
+        paper: {
+          id: null,
+          questionList: {
+            single: [],
+            multiple: [],
+            judgment: [],
+            blank: [],
+            text: [],
+          },
         },
         totalNum: 0,
       }
     },
     created() {
       const testPaperId = this.$route.query.id
+      this.paper.id = testPaperId
       this.init(testPaperId)
     },
     mounted() {},
     methods: {
+      submit() {
+        this.$confirm(
+          '提交后<strong style="color: red">无法修改</strong>，确认提交试卷？',
+          '提示',
+          {
+            confirmButtonText: '提交',
+            cancelButtonText: '取消',
+            type: 'warning',
+            dangerouslyUseHTMLString: true,
+          }
+        )
+          .then(() => {
+            this.$axios
+              .post('/testing/paper/checkAnswer', this.paper)
+              .then((res) => {
+                this.$router.push({
+                  path: 'answer/record',
+                  query: { recordId: res.data.data },
+                })
+              })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消提交，继续作答',
+            })
+          })
+      },
       init(testPaperId) {
         // console.log('init:' + testPaperId)
         this.$axios
@@ -208,23 +261,22 @@
             },
           })
           .then((res) => {
-            console.log(res)
-            this.questionList = res.data.data.testPaper
+            console.log(res.data.data)
+            this.paper.questionList = res.data.data.testPaper
             this.totalNum = res.data.data.questionIds.length
           })
           .then(() => {
-            console.log(this.questionList)
             // 获取第一个问题
-            if (this.questionList.single.length > 0) {
-              this.currentQuestion = this.questionList.single[0]
-            } else if (this.questionList.multiple.length > 0) {
-              this.currentQuestion = this.questionList.multiple[0]
-            } else if (this.questionList.judgment.length > 0) {
-              this.currentQuestion = this.questionList.judgment[0]
-            } else if (this.questionList.blank.length > 0) {
-              this.currentQuestion = this.questionList.blank[0]
-            } else if (this.questionList.text.length > 0) {
-              this.currentQuestion = this.questionList.text[0]
+            if (this.paper.questionList.single.length > 0) {
+              this.currentQuestion = this.paper.questionList.single[0]
+            } else if (this.paper.questionList.multiple.length > 0) {
+              this.currentQuestion = this.paper.questionList.multiple[0]
+            } else if (this.paper.questionList.judgment.length > 0) {
+              this.currentQuestion = this.paper.questionList.judgment[0]
+            } else if (this.paper.questionList.blank.length > 0) {
+              this.currentQuestion = this.paper.questionList.blank[0]
+            } else if (this.paper.questionList.text.length > 0) {
+              this.currentQuestion = this.paper.questionList.text[0]
             }
           })
       },
@@ -239,31 +291,31 @@
         }
       },
       jumpByNo(no) {
-        for (let q of this.questionList.single) {
+        for (let q of this.paper.questionList.single) {
           if (q.no == no) {
             this.jump(q)
             return
           }
         }
-        for (let q of this.questionList.multiple) {
+        for (let q of this.paper.questionList.multiple) {
           if (q.no == no) {
             this.jump(q)
             return
           }
         }
-        for (let q of this.questionList.judgment) {
+        for (let q of this.paper.questionList.judgment) {
           if (q.no == no) {
             this.jump(q)
             return
           }
         }
-        for (let q of this.questionList.blank) {
+        for (let q of this.paper.questionList.blank) {
           if (q.no == no) {
             this.jump(q)
             return
           }
         }
-        for (let q of this.questionList.text) {
+        for (let q of this.paper.questionList.text) {
           if (q.no == no) {
             this.jump(q)
             return
@@ -278,6 +330,7 @@
         }
         this.currentQuestion = question
         this.currentQuestion.show = 'primary'
+        console.log(this.currentQuestion)
       },
     },
   }

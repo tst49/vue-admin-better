@@ -147,6 +147,16 @@ export const asyncRoutes = [
           permissions: ['admin'],
         },
       },
+      {
+        path: 'answer/record',
+        name: 'AnswerRecord',
+        hidden: true,
+        component: () => import('@/views/testingModule/testAnswerRecord'),
+        meta: {
+          title: '答题记录',
+          permissions: ['admin'],
+        },
+      },
     ],
   },
   {
