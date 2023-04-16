@@ -1,5 +1,4 @@
 /**
- * @author https://vue-admin-beautiful.com （不想保留author可删除）
  * @description 登录、获取用户信息、退出登录、清除accessToken逻辑，不建议修改
  */
 
@@ -74,10 +73,10 @@ const actions = {
       Vue.prototype.$baseMessage('验证失败，请重新登录...', 'error')
       return false
     }
-    let { permissions, username, avatar } = data
-    if (permissions && username && Array.isArray(permissions)) {
+    let { permissions, nickname, avatar } = data
+    if (permissions && nickname && Array.isArray(permissions)) {
       commit('setPermissions', permissions)
-      commit('setUsername', username)
+      commit('setUsername', nickname)
       commit('setAvatar', avatar)
       return permissions
     } else {

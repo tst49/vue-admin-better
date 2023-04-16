@@ -1,12 +1,5 @@
 <template>
   <div class="register-container">
-    <el-alert
-      v-if="nodeEnv !== 'development'"
-      title="beautiful boys and girls欢迎加入vue-admin-beautifulQQ群：972435319"
-      type="success"
-      :closable="false"
-      style="position: fixed"
-    ></el-alert>
     <el-row>
       <el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16">
         <div style="color: transparent">占位符</div>
@@ -19,55 +12,39 @@
           :rules="registerRules"
           size="mini"
         >
-          <el-form-item prop="username">
+          <el-form-item prop="account">
+            <el-popover
+              ref="nicknamePopover"
+              content="输入QQ号将自动拉取昵称和头像"
+              placement="bottom"
+              trigger="focus"
+            ></el-popover>
             <el-input
-              v-model.trim="form.username"
-              v-focus
-              style="margin-top: 20px"
-              type="text"
-              placeholder="请输入用户名"
-              auto-complete="off"
-            >
-              <vab-icon slot="prefix" :icon="['fas', 'user-alt']"></vab-icon>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="phone">
-            <el-input
-              v-model.trim="form.phone"
-              type="text"
-              placeholder="请输入手机号"
-              maxlength="11"
+              v-model="form.account"
+              v-popover:nicknamePopover
+              :validate-event="false"
+              maxlength="12"
               show-word-limit
-              autocomplete="off"
+              placeholder="请输入QQ号"
             >
-              <vab-icon slot="prefix" :icon="['fas', 'mobile-alt']"></vab-icon>
+              <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
-          </el-form-item>
-          <el-form-item prop="phoneCode" style="position: relative">
-            <el-input
-              v-model.trim="form.phoneCode"
-              type="text"
-              placeholder="手机验证码"
-            >
-              <vab-icon
-                slot="prefix"
-                :icon="['fas', 'envelope-open']"
-              ></vab-icon>
-            </el-input>
-            <el-button
-              type="primary"
-              class="show-pwd phone-code"
-              :disabled="isGetphone"
-              @click="getPhoneCode"
-            >
-              {{ phoneCode }}
-            </el-button>
           </el-form-item>
           <el-form-item prop="password">
             <el-input
               v-model.trim="form.password"
               type="password"
               placeholder="设置密码"
+              autocomplete="new-password"
+            >
+              <vab-icon slot="prefix" :icon="['fas', 'unlock']"></vab-icon>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="pconfirm">
+            <el-input
+              v-model.trim="form.pconfirm"
+              type="password"
+              placeholder="请确认密码"
               autocomplete="new-password"
             >
               <vab-icon slot="prefix" :icon="['fas', 'unlock']"></vab-icon>
@@ -91,8 +68,8 @@
   </div>
 </template>
 <script>
-  import { isPassword, isPhone } from '@/utils/validate'
-  import { register } from '@/api/user'
+  import { JSEncrypt } from 'jsencrypt' // 引入
+  import { isPassword } from '@/utils/validate'
   export default {
     username: 'Register',
     directives: {
@@ -103,13 +80,6 @@
       },
     },
     data() {
-      const validateusername = (rule, value, callback) => {
-        if ('' == value) {
-          callback(new Error('用户名不能为空'))
-        } else {
-          callback()
-        }
-      }
       const validatePassword = (rule, value, callback) => {
         if (!isPassword(value)) {
           callback(new Error('密码不能少于6位'))
@@ -117,41 +87,31 @@
           callback()
         }
       }
-      const validatePhone = (rule, value, callback) => {
-        if (!isPhone(value)) {
-          callback(new Error('请输入正确的手机号'))
-        } else {
+      const validateConfirm = (rule, value, callback) => {
+        if (this.form.password == value) {
           callback()
+        } else {
+          callback(new Error('两次密码不一致'))
         }
       }
       return {
-        isGetphone: false,
-        getPhoneIntval: null,
-        phoneCode: '获取验证码',
-        showRegister: false,
-        nodeEnv: process.env.NODE_ENV,
-        title: this.$baseTitle,
         form: {},
         registerRules: {
-          username: [
-            { required: true, trigger: 'blur', message: '请输入用户名' },
-            { max: 20, trigger: 'blur', message: '最多不能超过20个字' },
-            { validator: validateusername, trigger: 'blur' },
-          ],
-          phone: [
-            { required: true, trigger: 'blur', message: '请输入手机号码' },
-            { validator: validatePhone, trigger: 'blur' },
+          account: [
+            { required: true, trigger: 'blur', message: '请输入QQ号' },
+            { min: 6, trigger: 'blur', message: '最少不能低于6位' },
+            { max: 12, trigger: 'blur', message: '最多不能超过12位' },
           ],
           password: [
             { required: true, trigger: 'blur', message: '请输入密码' },
             { validator: validatePassword, trigger: 'blur' },
           ],
-          phoneCode: [
-            { required: true, trigger: 'blur', message: '请输入手机验证码' },
+          pconfirm: [
+            { required: true, trigger: 'blur', message: '两次密码不一致' },
+            { validator: validateConfirm, trigger: 'blur' },
           ],
         },
         loading: false,
-        passwordType: 'password',
       }
     },
     created() {
@@ -159,47 +119,56 @@
     },
     beforeDestroy() {
       document.body.style.overflow = 'auto'
-      this.getPhoneIntval = null
-      clearInterval(this.getPhoneIntval)
     },
     methods: {
-      getPhoneCode() {
-        if (!isPhone(this.form.phone)) {
-          //this.$baseMessage('请输入手机号', 'error')
-          this.$refs['registerForm'].validateField('phone')
-          return
-        }
-        this.isGetphone = true
-        let n = 60
-        this.getPhoneIntval = setInterval(() => {
-          if (n > 0) {
-            n--
-            this.phoneCode = '重新获取(' + n + 's)'
-          } else {
-            this.getPhoneIntval = null
-            clearInterval(this.getPhoneIntval)
-            this.phoneCode = '获取验证码'
-            this.isGetphone = false
-          }
-        }, 1000)
-      },
       handleReister() {
-        this.$refs['registerForm'].validate(async (valid) => {
+        this.$refs['registerForm'].validate((valid) => {
           if (valid) {
-            const param = {
-              username: this.form.username,
-              phone: this.form.phone,
-              password: this.form.password,
-              phoneCode: this.form.phoneCode,
+            var qq = this.form.account
+            if (!isNaN(Number(qq)) && qq.length > 5 && qq.length < 13) {
+              this.$axios
+                .get('https://api.usuuu.com/qq/' + qq)
+                .then((res) => {
+                  if (res.data) {
+                    this.form.nickname = res.data.data.name
+                    this.form.avatar = res.data.data.avatar
+                  }
+                })
+                .then((res) => {
+                  //获取rsa公钥
+                  let publicKey
+                  this.$axios
+                    .get('/publicKey')
+                    .then((res) => {
+                      publicKey = res.data.data
+                      //rsa加密
+                      let encrypt = new JSEncrypt()
+                      encrypt.setPublicKey(publicKey)
+                      let encodePassword = encrypt.encrypt(this.form.password)
+                      this.form.password = encodePassword
+                    })
+                    .then((res) => {
+                      this.form.pconfirm = null
+                      this.$axios.post('/register', this.form).then((res) => {
+                        this.$alert('注册成功', '提示', {
+                          confirmButtonText: '登录',
+                          callback: (action) => {
+                            this.$router.push('/login')
+                          },
+                        })
+                      })
+                    })
+                })
             }
-            const { msg } = await register(param)
-            this.$baseMessage(msg, 'success')
+          } else {
+            return false
           }
         })
       },
     },
   }
 </script>
+
 <style lang="scss" scoped>
   .register-container {
     height: 100vh;

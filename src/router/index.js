@@ -42,7 +42,7 @@ export const asyncRoutes = [
     redirect: '/index',
     children: [
       {
-        path: 'index',
+        path: '/index',
         name: 'Index',
         component: () => import('@/views/index/index'),
         meta: {
@@ -185,9 +185,9 @@ export const asyncRoutes = [
     meta: { title: '个人主页', icon: 'box-open' },
     children: [
       {
-        path: 'info',
-        name: 'Info',
-        component: () => import('@/views/personalCenter/info'),
+        path: 'my/info',
+        name: 'MyInfo',
+        component: () => import('@/views/personalCenter/myInfo'),
         meta: {
           title: '个人资料',
           permissions: ['admin', 'editor'],
@@ -278,7 +278,7 @@ export const asyncRoutes = [
       {
         path: 'studentManagement',
         name: 'StudentManagement',
-        component: () => import('@/views/personalCenter/info'),
+        component: () => import('@/views/personalCenter/myInfo'),
         meta: {
           title: '学生管理',
           permissions: ['admin', 'editor'],

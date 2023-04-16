@@ -1,11 +1,5 @@
 <template>
   <div class="login-container">
-    <el-alert
-      title="beautiful boys and girls欢迎加入vue-admin-beautifulQQ群：972435319"
-      type="success"
-      :closable="false"
-      style="position: fixed"
-    ></el-alert>
     <el-row>
       <el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16">
         <div style="color: transparent">占位符</div>
@@ -20,14 +14,14 @@
         >
           <div class="title">hello !</div>
           <div class="title-tips">欢迎来到{{ title }}！</div>
-          <el-form-item style="margin-top: 40px" prop="username">
+          <el-form-item style="margin-top: 40px" prop="account">
             <span class="svg-container svg-container-admin">
               <vab-icon :icon="['fas', 'user']" />
             </span>
             <el-input
-              v-model.trim="form.username"
+              v-model.trim="form.account"
               v-focus
-              placeholder="请输入用户名"
+              placeholder="请输入账号"
               tabindex="1"
               type="text"
             />
@@ -86,9 +80,9 @@
       },
     },
     data() {
-      const validateusername = (rule, value, callback) => {
+      const validateAccount = (rule, value, callback) => {
         if ('' == value) {
-          callback(new Error('用户名不能为空'))
+          callback(new Error('账号不能为空'))
         } else {
           callback()
         }
@@ -101,18 +95,17 @@
         }
       }
       return {
-        nodeEnv: process.env.NODE_ENV,
         title: this.$baseTitle,
         form: {
-          username: '',
+          account: '',
           password: '',
         },
         rules: {
-          username: [
+          account: [
             {
               required: true,
               trigger: 'blur',
-              validator: validateusername,
+              validator: validateAccount,
             },
           ],
           password: [
@@ -141,13 +134,6 @@
     },
     beforeDestroy() {
       document.body.style.overflow = 'auto'
-    },
-    mounted() {
-      this.form.username = 'admin'
-      this.form.password = '123456'
-      setTimeout(() => {
-        this.handleLogin()
-      }, 3000)
     },
     methods: {
       handlePassword() {
