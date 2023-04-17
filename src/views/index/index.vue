@@ -173,7 +173,6 @@
       return {
         timer: 0,
         updateTime: process.env.VUE_APP_UPDATE_TIME,
-        nodeEnv: process.env.NODE_ENV,
         dependencies: dependencies,
         devDependencies: devDependencies,
         config1: {

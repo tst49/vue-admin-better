@@ -67,7 +67,7 @@ export const asyncRoutes = [
         component: () => import('@/views/learningModule/videoIndex'),
         meta: {
           title: '在线算法',
-          permissions: ['admin', 'editor'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -76,7 +76,7 @@ export const asyncRoutes = [
         component: () => import('@/views/learningModule/articleIndex'),
         meta: {
           title: '资料库',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -86,7 +86,7 @@ export const asyncRoutes = [
         component: () => import('@/views/learningModule/articleEdit'),
         meta: {
           title: '资料库编辑',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -96,7 +96,7 @@ export const asyncRoutes = [
         component: () => import('@/views/learningModule/articleDetail'),
         meta: {
           title: '资料库详情',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -106,7 +106,7 @@ export const asyncRoutes = [
         component: () => import('@/views/learningModule/videoDetail'),
         meta: {
           title: '在线算法详情',
-          permissions: ['admin', 'editor'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
     ],
@@ -126,7 +126,7 @@ export const asyncRoutes = [
         component: () => import('@/views/testingModule/testPaper'),
         meta: {
           title: '试卷作答页面',
-          permissions: ['admin', 'editor'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -135,7 +135,7 @@ export const asyncRoutes = [
         component: () => import('@/views/testingModule/questionIndex'),
         meta: {
           title: '题库',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -144,7 +144,7 @@ export const asyncRoutes = [
         component: () => import('@/views/testingModule/testPaperIndex'),
         meta: {
           title: '试卷库',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -154,7 +154,7 @@ export const asyncRoutes = [
         component: () => import('@/views/testingModule/testAnswerRecord'),
         meta: {
           title: '答题记录',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
     ],
@@ -171,7 +171,7 @@ export const asyncRoutes = [
         meta: {
           title: '积分榜',
           icon: 'home',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
     ],
@@ -190,7 +190,7 @@ export const asyncRoutes = [
         component: () => import('@/views/personalCenter/myInfo'),
         meta: {
           title: '个人资料',
-          permissions: ['admin', 'editor'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -199,7 +199,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '个人设置',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -208,7 +208,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '收藏夹',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -217,7 +217,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '我的讨论',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -226,7 +226,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '我的学习任务',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -235,7 +235,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '做题分析',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -244,7 +244,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '我的积分',
-          permissions: ['admin'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
@@ -253,7 +253,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '我的班级',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
@@ -262,7 +262,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '我发布的任务',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
     ],
@@ -281,7 +281,7 @@ export const asyncRoutes = [
         component: () => import('@/views/personalCenter/myInfo'),
         meta: {
           title: '学生管理',
-          permissions: ['admin', 'editor'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
@@ -290,7 +290,7 @@ export const asyncRoutes = [
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '班级管理',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
@@ -299,7 +299,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/articleManagement'),
         meta: {
           title: '资料库管理',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
@@ -308,7 +308,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/questionManagement'),
         meta: {
           title: '题库管理',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
@@ -317,7 +317,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/commentManagement'),
         meta: {
           title: '讨论区管理',
-          permissions: ['admin'],
+          permissions: ['teacher', 'admin'],
         },
       },
       {
