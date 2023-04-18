@@ -80,6 +80,7 @@
     "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recess-order": "^4.0.0",
     "svg-sprite-loader": "^6.0.11",
+    "vue-directive-image-previewer": "^2.2.2",
     "webpackbar": "^5.0.2"
   },
   "keywords": [

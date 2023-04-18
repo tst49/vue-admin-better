@@ -65,6 +65,45 @@
         生成试卷
         <i class="el-icon-upload el-icon--right"></i>
       </el-button>
+      <el-popover
+        v-model="visible"
+        title="刷题设置"
+        placement="top"
+        width="500"
+      >
+        <div>
+          <el-row :gutter="10">
+            <span>测试类型：</span>
+            <el-radio-group v-model="queryForm.numLimit">
+              <el-radio :label="1">快速测试（约五分钟）</el-radio>
+              <el-radio :label="2">常规测试（约三十分钟）</el-radio>
+            </el-radio-group>
+          </el-row>
+          <el-row :gutter="10">
+            <span>题目来源：</span>
+            <el-radio-group v-model="queryForm.typeLimit">
+              <el-radio :label="1">只出新题</el-radio>
+              <el-radio :label="2">只出错题</el-radio>
+              <el-radio :label="3">错题+新题</el-radio>
+              <el-radio :label="4">不限来源</el-radio>
+            </el-radio-group>
+          </el-row>
+          <el-row :gutter="10">
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="danger" @click="visible = false">
+                取消
+              </el-button>
+              <el-button type="primary" size="mini" @click="quickTest">
+                开始
+              </el-button>
+            </div>
+          </el-row>
+        </div>
+        <el-button slot="reference" type="primary" style="margin-left: 15px">
+          随机测试
+          <i class="el-icon-upload el-icon--right"></i>
+        </el-button>
+      </el-popover>
     </el-card>
     <el-card>
       <el-table
@@ -73,7 +112,6 @@
         :data="list"
         :element-loading-text="elementLoadingText"
         @selection-change="setSelectRows"
-        @sort-change="tableSortChange"
       >
         <el-table-column
           show-overflow-tooltip
@@ -142,6 +180,7 @@
 <script>
   import SingleQuestion from './components/singleQuestion'
   import TestPaperPreview from './components/testPaperPreview'
+
   export default {
     name: 'Index',
     components: {
@@ -178,6 +217,7 @@
     },
     data() {
       return {
+        visible: false,
         queryForm: {
           pageNo: 1,
           pageSize: 10,
@@ -185,6 +225,9 @@
           questionTags: [],
           questionCategory: [],
           questionLevel: [],
+          numLimit: 2,
+          typeLimit: 4,
+          testNow: false,
         },
         categoryList: [
           {
@@ -273,12 +316,24 @@
             this.listLoading = false
           })
       },
-      haveTry(row) {
-        this.$refs['question'].haveTry(row)
+      haveTry(id) {
+        this.$refs['question'].haveTry(id)
       },
       generatePaper() {
+        this.queryForm.numLimit = 2
+        this.queryForm.typeLimit = 4
+        this.queryForm.testNow = false
         this.$axios.post('/testing/paper/init', this.queryForm).then((res) => {
           this.$refs['paperPreview'].paperPreview(res.data.data)
+        })
+      },
+      quickTest() {
+        this.queryForm.testNow = true
+        this.$axios.post('/testing/paper/init', this.queryForm).then((res) => {
+          this.$router.push({
+            path: '/testing/paper',
+            query: { data: res.data.data },
+          })
         })
       },
       parseCategory(category) {
@@ -302,13 +357,6 @@
       handleCurrentChange(val) {
         this.queryForm.pageNo = val
         this.fetchData()
-      },
-      tableSortChange() {
-        const imageList = []
-        this.$refs.tableSort.tableData.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
       },
       setSelectRows(val) {
         // console.log(val)

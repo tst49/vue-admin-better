@@ -40,7 +40,6 @@
       :element-loading-text="elementLoadingText"
       :height="height"
       @selection-change="setSelectRows"
-      @sort-change="tableSortChange"
     >
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -184,13 +183,6 @@
             return '简答题'
         }
       },
-      tableSortChange() {
-        const imageList = []
-        this.$refs.tableSort.tableData.forEach((item, index) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-      },
       setSelectRows(val) {
         // console.log(val)
         this.selectRows = val
@@ -237,15 +229,6 @@
       },
       async fetchData() {
         this.listLoading = true
-        // const { data, totalCount } = await getList(this.queryForm)
-        // this.list = data
-        // console.log(data)
-        // const imageList = []
-        // data.forEach((item, index) => {
-        //   imageList.push(item.img)
-        // })
-        // this.imageList = imageList
-        // this.total = totalCount
         console.log(this.queryForm)
         this.$axios
           .get('/manage_center/question/list', {

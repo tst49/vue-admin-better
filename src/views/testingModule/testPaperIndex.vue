@@ -84,7 +84,6 @@
 <script>
   import TestPaperPreview from './components/testPaperPreview'
   export default {
-    name: 'Index',
     components: {
       TestPaperPreview,
     },
@@ -130,7 +129,7 @@
         )
           .then(() => {
             this.$router.push({
-              path: '/testing/paper',
+              path: '/paper',
               query: { id: id },
             })
           })

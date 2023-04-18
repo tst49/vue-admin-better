@@ -87,20 +87,20 @@
     name: 'CommentForm',
     props: {
       rootCommentId: {
-        type: String,
-        default: '-1',
+        type: Number,
+        default: -1,
       },
       parentCommentId: {
-        type: String,
-        default: '-1',
+        type: Number,
+        default: -1,
       },
       dataCategory: {
         type: Number,
         default: -1,
       },
       dataId: {
-        type: String,
-        default: '-1',
+        type: Number,
+        default: -1,
       },
     },
     data() {

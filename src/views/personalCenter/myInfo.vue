@@ -1,7 +1,7 @@
 <template>
   <div class="personalCenter-container">
     <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="视频封面上传" prop="avatar">
+      <el-form-item label="头像上传" prop="avatar">
         <div class="upload">
           <el-alert
             :closable="false"
@@ -14,9 +14,11 @@
             :action="action"
             :auto-upload="false"
             :close-on-click-modal="false"
-            :file-list="fileList"
+            :data="help.data"
+            :file-list="help.fileList"
+            :headers="help.headers"
             :limit="1"
-            :multiple="false"
+            :multiple="true"
             :on-error="handleError"
             :on-exceed="handleExceed"
             :on-preview="handlePreview"
@@ -28,46 +30,46 @@
           >
             <i slot="trigger" class="el-icon-plus"></i>
             <el-dialog
-              :visible.sync="dialogVisible"
+              :visible.sync="help.dialogVisible"
               append-to-body
               title="查看大图"
             >
               <div>
-                <img :src="imageUrl" alt="" width="100%" />
+                <img :src="help.dialogImageUrl" alt="" width="100%" />
               </div>
             </el-dialog>
           </el-upload>
           <el-button type="primary" @click="submitUpload">开始上传</el-button>
         </div>
       </el-form-item>
-      <el-form-item label="昵称">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
       <el-form-item label="学校">
-        <el-input v-model="form.school"></el-input>
+        <el-input v-model="form.school" disabled></el-input>
       </el-form-item>
       <el-form-item label="班级">
-        <el-input v-model="form.clazz"></el-input>
+        <el-input v-model="form.clazz" disabled></el-input>
       </el-form-item>
-      <el-form-item label="学号">
-        <el-input v-model="form.sno"></el-input>
+      <el-form-item label="账号">
+        <el-input v-model="form.account" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="昵称">
+        <el-input v-model="form.nickname"></el-input>
       </el-form-item>
       <el-form-item label="性别">
         <el-select v-model="form.gender" placeholder="请选择性别">
-          <el-option label="男" value="male"></el-option>
-          <el-option label="女" value="female"></el-option>
+          <el-option label="男" :value="1"></el-option>
+          <el-option label="女" :value="0"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生日">
         <el-date-picker
-          v-model="form.date1"
+          v-model="form.birthday"
           type="date"
           placeholder="选择日期"
           style="width: 100%"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit">保存</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -75,48 +77,78 @@
 </template>
 
 <script>
+  const action = 'http://localhost:8084/file/upload/save'
+
   export default {
-    name: 'PersonalCenter',
     data() {
       return {
+        action: action,
+        help: {
+          data: {},
+          loading: false,
+          dialogVisible: false,
+          headers: {},
+          fileList: [],
+          picture: 'picture',
+          dialogImageUrl: '',
+        },
         form: {
-          avatarUrl: '',
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
+          id: null,
+          avatar: '',
+          account: '',
+          nickname: '',
+          school: '',
+          clazz: '',
+          gender: null,
+          birthday: '',
         },
         loading: false,
-        fileList: [],
-        picture: 'picture',
-        imageUrl: '',
-        dialogVisible: false,
       }
     },
-    created() {},
+    created() {
+      this.getCurrentUserInfo()
+    },
     methods: {
+      onSubmit() {
+        this.$axios.post('/personal/info/edit', this.form).then((res) => {
+          this.$alert('操作成功', '提示', {
+            confirmButtonText: '确定',
+            callback: (action) => {
+              this.getCurrentUserInfo
+            },
+          })
+        })
+      },
+      getCurrentUserInfo() {
+        this.$axios.get('/personal/info').then((res) => {
+          this.form = res.data.data
+          this.help.fileList.push({
+            name: '1',
+            url: this.form.avatar,
+          })
+        })
+      },
+      submitUpload() {
+        this.$refs.upload.submit()
+      },
       handleProgress(event, file, fileList) {
-        this.loading = true
+        this.help.loading = true
       },
       handleSuccess(response, file, fileList) {
         this.form.thumbnail = response.data
-        this.$baseMessage(`上传头像成功！`, 'success')
-        this.loading = false
+        this.$baseMessage(`上传视频封面成功！`, 'success')
+        this.help.loading = false
       },
       handleError(err, file, fileList) {
-        this.$baseMessage(`上传头像失败！`, 'error')
-        this.loading = false
+        this.$baseMessage(`上传视频封面失败！`, 'error')
+        this.help.loading = false
       },
       handlePreview(file) {
-        this.imageUrl = file.url
-        this.dialogVisible = true
+        this.help.dialogImageUrl = file.url
+        this.help.dialogVisible = true
       },
       handleExceed(files, fileList) {
-        this.$baseMessage(`只能选择一张图片作为头像哦`, 'error')
+        this.$baseMessage(`只能选择一张图片做头像哦`, 'error')
       },
     },
   }

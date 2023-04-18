@@ -3,7 +3,7 @@
   <div class="comment-body">
     <!--评论表单-->
     <CommentForm
-      v-if="parentCommentId === '-1'"
+      v-if="parentCommentId === -1"
       :root-comment-id="-1"
       :parent-comment-id="-1"
       :data-category="dataCategory"

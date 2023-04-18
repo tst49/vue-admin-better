@@ -13,14 +13,18 @@ Vue.use(mavonEditor)
 import VueAliplayerV2 from 'vue-aliplayer-v2'
 Vue.use(VueAliplayerV2)
 
-/**
- * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
- */
+// /**
+//  * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
+//  */
 
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('@/utils/static')
-  mockXHR()
-}
+// if (process.env.NODE_ENV === 'production') {
+//   const { mockXHR } = require('@/utils/static')
+//   mockXHR()
+// }
+
+import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
+import 'vue-directive-image-previewer/dist/assets/style.css'
+Vue.use(VueDirectiveImagePreviewer)
 
 Vue.config.productionTip = false
 

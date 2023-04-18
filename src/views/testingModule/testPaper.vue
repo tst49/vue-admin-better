@@ -193,10 +193,13 @@
   </div>
 </template>
 <script>
+  import screenfull from 'screenfull'
+
   export default {
     name: 'Test',
     data() {
       return {
+        isFullscreen: false,
         show: true,
         currentQuestion: {
           no: 1,
@@ -219,10 +222,17 @@
     },
     created() {
       const testPaperId = this.$route.query.id
-      this.paper.id = testPaperId
-      this.init(testPaperId)
+      if (testPaperId != null) {
+        this.paper.id = testPaperId
+        this.init(testPaperId)
+      } else {
+        // 随机测试不含id
+        this.paper.questionList = this.$route.query.data.testPaper
+        this.totalNum = this.$route.query.data.questionIds.length
+        this.initFirstQuestion()
+      }
+      this.fullon()
     },
-    mounted() {},
     methods: {
       submit() {
         this.$confirm(
@@ -239,6 +249,7 @@
             this.$axios
               .post('/testing/paper/checkAnswer', this.paper)
               .then((res) => {
+                this.fulloff()
                 this.$router.push({
                   path: 'answer/record',
                   query: { recordId: res.data.data },
@@ -261,24 +272,28 @@
             },
           })
           .then((res) => {
-            console.log(res.data.data)
+            // console.log(res.data.data)
             this.paper.questionList = res.data.data.testPaper
             this.totalNum = res.data.data.questionIds.length
           })
           .then(() => {
-            // 获取第一个问题
-            if (this.paper.questionList.single.length > 0) {
-              this.currentQuestion = this.paper.questionList.single[0]
-            } else if (this.paper.questionList.multiple.length > 0) {
-              this.currentQuestion = this.paper.questionList.multiple[0]
-            } else if (this.paper.questionList.judgment.length > 0) {
-              this.currentQuestion = this.paper.questionList.judgment[0]
-            } else if (this.paper.questionList.blank.length > 0) {
-              this.currentQuestion = this.paper.questionList.blank[0]
-            } else if (this.paper.questionList.text.length > 0) {
-              this.currentQuestion = this.paper.questionList.text[0]
-            }
+            this.initFirstQuestion()
           })
+      },
+      initFirstQuestion() {
+        this.jumpByNo(1)
+        // 获取第一个问题
+        // if (this.paper.questionList.single.length > 0) {
+        //   this.currentQuestion = this.paper.questionList.single[0]
+        // } else if (this.paper.questionList.multiple.length > 0) {
+        //   this.currentQuestion = this.paper.questionList.multiple[0]
+        // } else if (this.paper.questionList.judgment.length > 0) {
+        //   this.currentQuestion = this.paper.questionList.judgment[0]
+        // } else if (this.paper.questionList.blank.length > 0) {
+        //   this.currentQuestion = this.paper.questionList.blank[0]
+        // } else if (this.paper.questionList.text.length > 0) {
+        //   this.currentQuestion = this.paper.questionList.text[0]
+        // }
       },
       previous() {
         if (this.currentQuestion.no > 1) {
@@ -331,6 +346,19 @@
         this.currentQuestion = question
         this.currentQuestion.show = 'primary'
         console.log(this.currentQuestion)
+      },
+      // 全屏控制
+      fullon() {
+        console.log(screenfull.isEnabled + '-' + screenfull.isFullscreen)
+        if (screenfull.isEnabled && !screenfull.isFullscreen) {
+          screenfull.toggle()
+        }
+      },
+      fulloff() {
+        console.log(screenfull.isEnabled + '-' + screenfull.isFullscreen)
+        if (screenfull.isEnabled && screenfull.isFullscreen) {
+          screenfull.toggle()
+        }
       },
     },
   }

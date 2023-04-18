@@ -1,12 +1,14 @@
 <template>
   <el-dialog
-    :title="title"
+    :title="testPaperVO.title"
     :visible.sync="dialogFormVisible"
     width="900px"
     @close="close"
   >
-    <p>试卷知识点主要发布：</p>
-    <el-tag v-for="tag in testPaperTags" :key="tag">{{ tag }}</el-tag>
+    <p>试卷知识点主要分布在：</p>
+    <el-tag v-for="tag in testPaperVO.testPaperTags" :key="tag">
+      {{ tag }}
+    </el-tag>
     <el-row v-if="questionList.single.length > 0">
       <el-divider content-position="center">单选题</el-divider>
       <el-row v-for="question in questionList.single" :key="question.id">
@@ -198,7 +200,7 @@
         )
           .then(() => {
             this.$router.push({
-              path: '/testing/paper',
+              path: '/paper',
               query: { id: this.testPaperVO.id },
             })
           })

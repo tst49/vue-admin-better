@@ -120,7 +120,7 @@ export const asyncRoutes = [
     meta: { title: '刷题学习', icon: 'box-open' },
     children: [
       {
-        path: 'paper',
+        path: '/paper',
         name: 'Paper',
         hidden: true,
         component: () => import('@/views/testingModule/testPaper'),
@@ -130,7 +130,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'question/index',
+        path: '/question/index',
         name: 'QuestionIndex',
         component: () => import('@/views/testingModule/questionIndex'),
         meta: {
@@ -139,7 +139,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'paper/index',
+        path: '/paper/index',
         name: 'PaperIndex',
         component: () => import('@/views/testingModule/testPaperIndex'),
         meta: {
@@ -148,7 +148,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'answer/record',
+        path: '/answer/record',
         name: 'AnswerRecord',
         hidden: true,
         component: () => import('@/views/testingModule/testAnswerRecord'),
@@ -165,7 +165,7 @@ export const asyncRoutes = [
     redirect: '/noRedirect',
     children: [
       {
-        path: 'index',
+        path: '/index',
         name: 'Index',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -177,7 +177,7 @@ export const asyncRoutes = [
     ],
   },
   {
-    path: '/personalCenter',
+    path: 'personalCenter',
     component: Layout,
     redirect: 'noRedirect',
     name: 'PersonalCenter',
@@ -185,7 +185,7 @@ export const asyncRoutes = [
     meta: { title: '个人主页', icon: 'box-open' },
     children: [
       {
-        path: 'my/info',
+        path: '/my/info',
         name: 'MyInfo',
         component: () => import('@/views/personalCenter/myInfo'),
         meta: {
@@ -194,16 +194,16 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'setting',
-        name: 'Setting',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: '/answer/record/index',
+        name: 'AnswerRecordIndex',
+        component: () => import('@/views/personalCenter/answerRecordIndex'),
         meta: {
-          title: '个人设置',
+          title: '历史答题记录',
           permissions: ['student', 'teacher', 'admin'],
         },
       },
       {
-        path: 'favorites',
+        path: '/favorites',
         name: 'Favorites',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -212,7 +212,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'myDiscuss',
+        path: '/my/discuss',
         name: 'MyDiscuss',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -221,7 +221,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'myTask',
+        path: '/my/task',
         name: 'MyTask',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -239,7 +239,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'myPoints',
+        path: '/my/points',
         name: 'MyPoints',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -248,7 +248,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'myClazz',
+        path: '/my/clazz',
         name: 'MyClazz',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -257,7 +257,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'myPublish',
+        path: '/my/publish',
         name: 'MyPublish',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -276,7 +276,7 @@ export const asyncRoutes = [
     meta: { title: '管理中心', icon: 'box-open' },
     children: [
       {
-        path: 'studentManagement',
+        path: '/student/management',
         name: 'StudentManagement',
         component: () => import('@/views/personalCenter/myInfo'),
         meta: {
@@ -285,7 +285,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'clazzManagement',
+        path: '/clazz/management',
         name: 'ClazzManagement',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -294,7 +294,16 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'articleManagement',
+        path: '/video/management',
+        name: 'VideoManagement',
+        component: () => import('@/views/managementModule/videoManagement'),
+        meta: {
+          title: '视频库管理',
+          permissions: ['teacher', 'admin'],
+        },
+      },
+      {
+        path: '/article/management',
         name: 'ArticleManagement',
         component: () => import('@/views/managementModule/articleManagement'),
         meta: {
@@ -303,7 +312,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'questionManagement',
+        path: '/question/management',
         name: 'QuestionManagement',
         component: () => import('@/views/managementModule/questionManagement'),
         meta: {
@@ -312,7 +321,16 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'commentManagement',
+        path: '/paper/management',
+        name: 'PaperManagement',
+        component: () => import('@/views/managementModule/testPaperManagement'),
+        meta: {
+          title: '试卷库管理',
+          permissions: ['teacher', 'admin'],
+        },
+      },
+      {
+        path: '/comment/management',
         name: 'CommentManagement',
         component: () => import('@/views/managementModule/commentManagement'),
         meta: {
@@ -321,7 +339,7 @@ export const asyncRoutes = [
         },
       },
       {
-        path: 'pointsRulesManagement',
+        path: '/pointsRules/management',
         name: 'PointsRulesManagement',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
@@ -331,23 +349,6 @@ export const asyncRoutes = [
       },
     ],
   },
-  /* {
-    path: "/test",
-    component: Layout,
-    redirect: "noRedirect",
-    children: [
-      {
-        path: "test",
-        name: "Test",
-        component: () => import("@/views/test/index"),
-        meta: {
-          title: "test",
-          icon: "marker",
-          permissions: ["admin"],
-        },
-      },
-    ],
-  }, */
 
   {
     path: '/vab',

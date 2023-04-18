@@ -1,5 +1,39 @@
 <template>
   <div>
+    <el-card>
+      <el-row class="query-row">
+        <vab-icon :icon="['fas', 'search']"></vab-icon>
+        <span>审核状态</span>
+        <el-checkbox-group v-model="queryForm.status">
+          <el-checkbox-button
+            v-for="state in stateList"
+            :key="state.value"
+            :label="state.value"
+          >
+            {{ state.label }}
+          </el-checkbox-button>
+        </el-checkbox-group>
+      </el-row>
+      <el-row class="query-row">
+        <vab-icon :icon="['fas', 'search']"></vab-icon>
+        <span>评论资料类型</span>
+        <el-checkbox-group v-model="queryForm.dataCategory">
+          <el-checkbox-button
+            v-for="category in categoryList"
+            :key="category.value"
+            :label="category.value"
+          >
+            {{ category.label }}
+          </el-checkbox-button>
+        </el-checkbox-group>
+      </el-row>
+      <el-row>
+        <el-button icon="el-icon-search" type="primary" @click="page(1)">
+          查询
+        </el-button>
+      </el-row>
+    </el-card>
+
     <div>
       <el-table
         :data="
@@ -23,7 +57,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="昵称"
+          label="评论用户"
           prop="nickname"
           align="center"
         ></el-table-column>
@@ -33,11 +67,6 @@
           align="center"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column label="审核状态" align="center">
-          <template #default="scope">
-            {{ scope.row.status | statusFilter }}
-          </template>
-        </el-table-column>
         <el-table-column label="评论资料" align="center">
           <template #default="scope">
             {{ scope.row.dataCategory | dataCategoryFilter }}：{{
@@ -45,6 +74,28 @@
             }}
           </template>
         </el-table-column>
+        <el-table-column label="审核状态" align="center">
+          <template #default="scope">
+            <el-tag :type="scope.row.status | statusColorFilter">
+              {{ scope.row.status | statusFilter }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="审核人"
+          prop="reviewUserName"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          label="失败原因"
+          prop="errMsg"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          label="审核时间"
+          prop="reviewTime"
+          align="center"
+        ></el-table-column>
         <el-table-column
           label="创建时间"
           prop="createTime"
@@ -59,18 +110,21 @@
             />
           </template>
           <template #default="scope">
-            <el-button size="mini" @click="handleJump(scope.row.id)">
-              Jump to
+            <el-button
+              size="mini"
+              @click="handleJump(scope.row.dataId, scope.row.dataCategory)"
+            >
+              查看对应资料
             </el-button>
-            <el-button size="mini" @click="handleReview(scope.row.id)">
-              Review
+            <el-button size="mini" @click="handleReview(scope.row)">
+              审核
             </el-button>
             <el-button
               size="mini"
               type="danger"
               @click="handleDelete(scope.row.id)"
             >
-              Delete
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -80,18 +134,26 @@
         class="mypage"
         background
         layout="prev, total, pager, next"
-        :current-page="pageNo"
+        :current-page="queryForm.pageNo"
         :total="total"
-        :page-size="pageSize"
+        :page-size="queryForm.pageSize"
         @current-change="page"
       ></el-pagination>
     </div>
+    <single-question ref="question"></single-question>
+    <comment-review ref="review"></comment-review>
   </div>
 </template>
 
 <script>
+  import SingleQuestion from '../testingModule/components/singleQuestion'
+  import CommentReview from './components/commentReview'
+
   export default {
-    components: {},
+    components: {
+      SingleQuestion,
+      CommentReview,
+    },
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -101,12 +163,19 @@
         }
         return statusMap[status]
       },
+      statusColorFilter(status) {
+        const statusMap = {
+          0: 'warning',
+          1: 'success',
+          2: 'danger',
+        }
+        return statusMap[status]
+      },
       dataCategoryFilter(category) {
         const dataCategoryMap = {
           1: '在线算法',
           2: '资料',
           3: '题目',
-          4: '试卷',
         }
         return dataCategoryMap[category]
       },
@@ -116,17 +185,65 @@
         //tableData需要定义成[],不能是{},否则filter会报错
         tableData: [],
         search: '',
-        pageNo: 1,
-        pageSize: 15,
+        queryForm: {
+          pageNo: 1,
+          pageSize: 15,
+          status: [],
+          dataCategory: [],
+        },
         total: 0,
+        stateList: [
+          {
+            value: 0,
+            label: '等待审核',
+          },
+          {
+            value: 1,
+            label: '审核通过',
+          },
+          {
+            value: 2,
+            label: '审核不通过',
+          },
+        ],
+        categoryList: [
+          {
+            value: 1,
+            label: '在线算法',
+          },
+          {
+            value: 2,
+            label: '资料',
+          },
+          {
+            value: 3,
+            label: '题目',
+          },
+        ],
       }
     },
     created() {
-      this.page(1)
+      this.page()
     },
     methods: {
-      handleReview(commentId) {},
-      handleJump() {},
+      handleReview(row) {
+        this.$refs['review'].review(row)
+      },
+      handleJump(id, category) {
+        if (category == 1) {
+          this.$router.push({
+            path: '/video/detail',
+            query: { videoId: id },
+          })
+        } else if (category == 2) {
+          this.$router.push({
+            path: '/article/detail',
+            query: { articleId: id },
+          })
+        } else if (category == 3) {
+          this.$refs['question'].haveTry(id)
+        }
+      },
       handleDelete(commentId) {
         this.$confirm(
           '此操作<strong style="color: red">不可恢复</strong>，是否删除?<br>',
@@ -140,7 +257,7 @@
         )
           .then(() => {
             this.$axios
-              .delete('/manage_center/comment/delete', {
+              .delete('/manage_center/comment', {
                 params: {
                   commentId: commentId,
                 },
@@ -161,15 +278,10 @@
             })
           })
       },
-      page(pageNo) {
+      page() {
         const _this = this
         _this.$axios
-          .get('/manage_center/comment/list', {
-            params: {
-              pageNo: pageNo,
-              pageSize: this.pageSize,
-            },
-          })
+          .post('/manage_center/comment/list', this.queryForm)
           .then((res) => {
             _this.tableData = res.data.data.list
             _this.total = res.data.data.total
@@ -187,5 +299,9 @@
   .mypage {
     margin: 0 auto;
     text-align: center;
+  }
+
+  .query-row {
+    margin-bottom: 10px;
   }
 </style>
