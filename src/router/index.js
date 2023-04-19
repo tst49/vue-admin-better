@@ -278,7 +278,7 @@ export const asyncRoutes = [
       {
         path: '/student/management',
         name: 'StudentManagement',
-        component: () => import('@/views/personalCenter/myInfo'),
+        component: () => import('@/views/managementModule/studentManagement'),
         meta: {
           title: '学生管理',
           permissions: ['teacher', 'admin'],
@@ -287,7 +287,7 @@ export const asyncRoutes = [
       {
         path: '/clazz/management',
         name: 'ClazzManagement',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/managementModule/clazzManagement'),
         meta: {
           title: '班级管理',
           permissions: ['teacher', 'admin'],

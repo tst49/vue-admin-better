@@ -41,59 +41,37 @@
       :height="height"
       @selection-change="setSelectRows"
     >
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="题目">
-              <span>{{ props.row.content }}</span>
-            </el-form-item>
-            <el-form-item label="选项">
-              <span>{{ props.row.options }}</span>
-            </el-form-item>
-            <el-form-item label="答案">
-              <span>{{ props.row.answer }}</span>
-            </el-form-item>
-            <el-form-item label="贡献者">
-              <span>{{ props.row.author }}</span>
-            </el-form-item>
-            <el-form-item label="创建时间">
-              <span>{{ props.row.createTime }}</span>
-            </el-form-item>
-            <el-form-item label="修改时间">
-              <span>{{ props.row.modifyTime }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
       <el-table-column
         show-overflow-tooltip
         type="selection"
         width="55"
       ></el-table-column>
-      <el-table-column label="难度">
-        <template #default="{ row }">
-          <el-tag :type="row.level | levelFilter" effect="plain">
-            {{ levelList[row.level - 1] }}
-          </el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column label="班级" prop="clazzName"></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="content"
-        label="题目"
+        prop="headcount"
+        label="人数"
       ></el-table-column>
-      <el-table-column label="题型">
-        <template #default="{ row }">
-          <el-tag :type="row.category | categoryFilter">
-            {{ parseCategory(row.category) }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column show-overflow-tooltip label="知识点">
-        <template #default="{ row }">
-          <el-tag v-for="tag in row.tags" :key="tag">{{ tag }}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="leaderName"
+        label="指导老师"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="school"
+        label="学校"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="createTime"
+        label="创建时间"
+      ></el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="modifyTime"
+        label="上一次变更时间"
+      ></el-table-column>
       <el-table-column show-overflow-tooltip label="操作" width="180px">
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
@@ -115,35 +93,13 @@
 </template>
 
 <script>
-  import TableEdit from './components/questionManageEdit'
+  import TableEdit from './components/clazzManageEdit'
   export default {
-    name: 'QuestionManagement',
     components: {
       TableEdit,
     },
-    filters: {
-      categoryFilter(status) {
-        const categoryMap = {
-          1: 'info',
-          2: 'warning',
-          3: 'success',
-          4: 'danger',
-          5: '',
-        }
-        return categoryMap[status]
-      },
-      levelFilter(level) {
-        const levelMap = {
-          1: 'success',
-          2: 'warning',
-          3: 'danger',
-        }
-        return levelMap[level]
-      },
-    },
     data() {
       return {
-        levelList: ['简单', '中等', '困难'],
         list: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
@@ -169,29 +125,33 @@
     beforeDestroy() {},
     mounted() {},
     methods: {
-      parseCategory(category) {
-        switch (category) {
-          case 1:
-            return '单选题'
-          case 2:
-            return '多选题'
-          case 3:
-            return '判断题'
-          case 4:
-            return '填空题'
-          case 5:
-            return '简答题'
-        }
+      async fetchData() {
+        this.listLoading = true
+        console.log(this.queryForm)
+        this.$axios
+          .get('/manage_center/clazz/list', {
+            params: {
+              key: this.queryForm.key,
+              pageNo: this.queryForm.pageNo,
+              pageSize: this.queryForm.pageSize,
+            },
+          })
+          .then((res) => {
+            console.log(res)
+            this.list = res.data.data.list
+            this.total = res.data.data.total
+          })
+          .then(() => {
+            this.listLoading = false
+          })
       },
       setSelectRows(val) {
-        // console.log(val)
         this.selectRows = val
       },
       handleAdd() {
         this.$refs['edit'].showEdit()
       },
       handleEdit(row) {
-        // console.log(row)
         this.$refs['edit'].showEdit(row)
       },
       handleDelete(row) {
@@ -226,26 +186,6 @@
       handleQuery() {
         this.queryForm.pageNo = 1
         this.fetchData()
-      },
-      async fetchData() {
-        this.listLoading = true
-        console.log(this.queryForm)
-        this.$axios
-          .get('/manage_center/question/list', {
-            params: {
-              key: this.queryForm.key,
-              pageNo: this.queryForm.pageNo,
-              pageSize: this.queryForm.pageSize,
-            },
-          })
-          .then((res) => {
-            console.log(res)
-            this.list = res.data.data.list
-            this.total = res.data.data.total
-          })
-          .then(() => {
-            this.listLoading = false
-          })
       },
     },
   }

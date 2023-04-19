@@ -4,7 +4,7 @@
     <h3>
       发表评论
       <el-button
-        v-show="rootCommentId != -1"
+        v-show="rootCommentId != '-1'"
         class="m-small"
         size="mini"
         type="primary"
@@ -87,20 +87,20 @@
     name: 'CommentForm',
     props: {
       rootCommentId: {
-        type: Number,
-        default: -1,
+        type: String,
+        default: '-1',
       },
       parentCommentId: {
-        type: Number,
-        default: -1,
+        type: String,
+        default: '-1',
       },
       dataCategory: {
         type: Number,
         default: -1,
       },
       dataId: {
-        type: Number,
-        default: -1,
+        type: String,
+        default: '-1',
       },
     },
     data() {

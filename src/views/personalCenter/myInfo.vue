@@ -46,7 +46,38 @@
         <el-input v-model="form.school" disabled></el-input>
       </el-form-item>
       <el-form-item label="班级">
-        <el-input v-model="form.clazz" disabled></el-input>
+        <el-button
+          v-if="form.bindStatus == 0"
+          type="text"
+          @click="clazzApply(form.id)"
+        >
+          申请加入班级
+        </el-button>
+        <p v-if="form.bindStatus == 1" style="color: orange">
+          当前已申请加入班级 [ {{ form.clazz }} ]，正在审核中
+        </p>
+        <el-button
+          v-if="form.bindStatus == 1"
+          type="text"
+          @click="cancelApply(form.id)"
+        >
+          取消申请
+        </el-button>
+        <el-input
+          v-if="form.bindStatus == 2"
+          v-model="form.clazz"
+          disabled
+        ></el-input>
+        <p v-if="form.bindStatus == 3" style="color: red">
+          申请加入班级 [ {{ form.clazz }} ] 流程终止：{{ form.rejectReason }}
+        </p>
+        <el-button
+          v-if="form.bindStatus == 3"
+          type="text"
+          @click="clazzApply(form.id)"
+        >
+          重新申请
+        </el-button>
       </el-form-item>
       <el-form-item label="账号">
         <el-input v-model="form.account" disabled></el-input>
@@ -73,13 +104,18 @@
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
+    <table-edit ref="apply"></table-edit>
   </div>
 </template>
 
 <script>
   const action = 'http://localhost:8084/file/upload/save'
 
+  import TableEdit from './components/clazzApply'
   export default {
+    components: {
+      TableEdit,
+    },
     data() {
       return {
         action: action,
@@ -101,6 +137,7 @@
           clazz: '',
           gender: null,
           birthday: '',
+          bindStatus: null,
         },
         loading: false,
       }
@@ -109,12 +146,32 @@
       this.getCurrentUserInfo()
     },
     methods: {
+      cancelApply(id) {
+        this.$confirm('确认取消加入班级', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '我再想想',
+          type: 'warning',
+        }).then(() => {
+          this.$axios
+            .get('/personal/clazz/apply/cancel', {
+              params: {
+                studentId: id,
+              },
+            })
+            .then((res) => {
+              this.getCurrentUserInfo()
+            })
+        })
+      },
+      clazzApply(id) {
+        this.$refs['apply'].clazzApply(id)
+      },
       onSubmit() {
         this.$axios.post('/personal/info/edit', this.form).then((res) => {
           this.$alert('操作成功', '提示', {
             confirmButtonText: '确定',
             callback: (action) => {
-              this.getCurrentUserInfo
+              this.getCurrentUserInfo()
             },
           })
         })
@@ -122,10 +179,12 @@
       getCurrentUserInfo() {
         this.$axios.get('/personal/info').then((res) => {
           this.form = res.data.data
-          this.help.fileList.push({
-            name: '1',
-            url: this.form.avatar,
-          })
+          if (this.help.fileList.length < 1) {
+            this.help.fileList.push({
+              name: '1',
+              url: this.form.avatar,
+            })
+          }
         })
       },
       submitUpload() {
@@ -135,7 +194,7 @@
         this.help.loading = true
       },
       handleSuccess(response, file, fileList) {
-        this.form.thumbnail = response.data
+        this.form.avatar = response.data
         this.$baseMessage(`上传视频封面成功！`, 'success')
         this.help.loading = false
       },
