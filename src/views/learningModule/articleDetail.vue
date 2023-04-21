@@ -1,8 +1,27 @@
 <template>
   <div>
     <div class="mblog">
-      <el-tag v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
       <h2>{{ article.title }}</h2>
+      <el-row>
+        <el-tag v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
+        <el-button
+          v-if="article.isLike"
+          style="margin-left: 15px"
+          type="warning"
+          icon="el-icon-star-on"
+          circle
+          @click="like()"
+        ></el-button>
+        <el-button
+          v-else
+          style="margin-left: 15px"
+          type="warning"
+          icon="el-icon-star-off"
+          circle
+          plain
+          @click="like()"
+        ></el-button>
+      </el-row>
       <p>文章字数约等于：{{ article.words }}</p>
       <p>文章阅读数：{{ article.viewCount }}</p>
       <el-link v-if="article.isAuthor" icon="el-icon-edit">
@@ -78,6 +97,26 @@
         })
     },
     methods: {
+      like() {
+        this.$axios
+          .get('/manage_center/like/edit', {
+            params: {
+              bool: !this.article.isLike,
+              dataCategory: this.category,
+              dataId: this.article.id,
+            },
+          })
+          .then((res) => {
+            if (this.article.isLike) {
+              this.$message('已取消收藏')
+            } else {
+              this.$message('已收藏')
+            }
+          })
+          .then((res) => {
+            this.article.isLike = !this.article.isLike
+          })
+      },
       async showComment(category, articleId) {
         this.$refs.comment.showComment(category, articleId)
         this.commentVisible = true

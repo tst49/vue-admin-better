@@ -16,7 +16,6 @@
           placement="top"
         >
           <el-card>
-            <el-tag v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
             <h4 style="font-size: 15pt">
               <router-link
                 :to="{
@@ -27,6 +26,27 @@
                 {{ article.title }}
               </router-link>
             </h4>
+            <el-row>
+              <el-tag v-for="tag in article.tags" :key="tag">{{ tag }}</el-tag>
+              <el-button
+                v-if="article.isLike"
+                style="margin-left: 15px"
+                type="warning"
+                icon="el-icon-star-on"
+                circle
+                @click="like(article)"
+              ></el-button>
+              <el-button
+                v-else
+                style="margin-left: 15px"
+                type="warning"
+                icon="el-icon-star-off"
+                circle
+                plain
+                @click="like(article)"
+              ></el-button>
+            </el-row>
+
             <p>最近更新于：{{ article.modifyTime }}</p>
             <p>文章摘要：{{ article.description }}</p>
           </el-card>
@@ -47,9 +67,13 @@
 </template>
 
 <script>
+  // 资料
+  const category = 2
+
   export default {
     data() {
       return {
+        category: category,
         articles: [],
         pageNo: 1,
         total: 0,
@@ -60,6 +84,26 @@
       this.page(1)
     },
     methods: {
+      like(article) {
+        this.$axios
+          .get('/manage_center/like/edit', {
+            params: {
+              bool: !article.isLike,
+              dataCategory: this.category,
+              dataId: article.id,
+            },
+          })
+          .then((res) => {
+            if (article.isLike) {
+              this.$message('已取消收藏')
+            } else {
+              this.$message('已收藏')
+            }
+          })
+          .then((res) => {
+            article.isLike = !article.isLike
+          })
+      },
       page() {
         this.$axios
           .get('/learning/article/overview/list', {

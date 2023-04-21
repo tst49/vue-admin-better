@@ -105,7 +105,7 @@
                   callback: (action) => {
                     //create
                     if (_this.ruleForm.id == '') {
-                      _this.$router.push('/learning/article')
+                      _this.$router.push('/article/index')
                     } else {
                       _this.$router.back()
                     }

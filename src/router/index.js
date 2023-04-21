@@ -165,8 +165,8 @@ export const asyncRoutes = [
     redirect: '/noRedirect',
     children: [
       {
-        path: '/index',
-        name: 'Index',
+        path: '/rank/board',
+        name: 'RankBoard',
         component: () => import('@/views/vab/nested/menu1/index'),
         meta: {
           title: '积分榜',
@@ -205,7 +205,7 @@ export const asyncRoutes = [
       {
         path: '/favorites',
         name: 'Favorites',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/personalCenter/myFavorite'),
         meta: {
           title: '收藏夹',
           permissions: ['student', 'teacher', 'admin'],
@@ -214,21 +214,21 @@ export const asyncRoutes = [
       {
         path: '/my/discuss',
         name: 'MyDiscuss',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/personalCenter/myComment'),
         meta: {
           title: '我的讨论',
-          permissions: ['student', 'teacher', 'admin'],
+          permissions: ['student', 'teacher'],
         },
       },
-      {
-        path: '/my/task',
-        name: 'MyTask',
-        component: () => import('@/views/vab/nested/menu1/index'),
-        meta: {
-          title: '我的学习任务',
-          permissions: ['student', 'teacher', 'admin'],
-        },
-      },
+      // {
+      //   path: '/my/task',
+      //   name: 'MyTask',
+      //   component: () => import('@/views/vab/nested/menu1/index'),
+      //   meta: {
+      //     title: '我的学习任务',
+      //     permissions: ['student', 'teacher', 'admin'],
+      //   },
+      // },
       {
         path: 'testAnalysis',
         name: 'TestAnalysis',
@@ -250,21 +250,30 @@ export const asyncRoutes = [
       {
         path: '/my/clazz',
         name: 'MyClazz',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/personalCenter/myClazz'),
         meta: {
           title: '我的班级',
-          permissions: ['teacher', 'admin'],
+          permissions: ['teacher'],
         },
       },
       {
-        path: '/my/publish',
-        name: 'MyPublish',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        path: '/my/student',
+        name: 'MyStudent',
+        component: () => import('@/views/personalCenter/myStudent'),
         meta: {
-          title: '我发布的任务',
-          permissions: ['teacher', 'admin'],
+          title: '我的学生',
+          permissions: ['teacher'],
         },
       },
+      // {
+      //   path: '/my/publish',
+      //   name: 'MyPublish',
+      //   component: () => import('@/views/vab/nested/menu1/index'),
+      //   meta: {
+      //     title: '我发布的任务',
+      //     permissions: ['teacher', 'admin'],
+      //   },
+      // },
     ],
   },
   {
@@ -290,6 +299,15 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/clazzManagement'),
         meta: {
           title: '班级管理',
+          permissions: ['teacher', 'admin'],
+        },
+      },
+      {
+        path: '/auth/management',
+        name: 'AuthManagement',
+        component: () => import('@/views/managementModule/authManagement'),
+        meta: {
+          title: '权限管理',
           permissions: ['teacher', 'admin'],
         },
       },

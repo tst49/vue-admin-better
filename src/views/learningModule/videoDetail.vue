@@ -12,8 +12,29 @@
           作者：{{ videoDetail.authorName }}
         </li>
         <li>
-          分类：
-          <el-tag v-for="tag in videoDetail.tags" :key="tag">{{ tag }}</el-tag>
+          <el-row>
+            分类：
+            <el-tag v-for="tag in videoDetail.tags" :key="tag">
+              {{ tag }}
+            </el-tag>
+            <el-button
+              v-if="videoDetail.isLike"
+              style="margin-left: 15px"
+              type="warning"
+              icon="el-icon-star-on"
+              circle
+              @click="like()"
+            ></el-button>
+            <el-button
+              v-else
+              style="margin-left: 15px"
+              type="warning"
+              icon="el-icon-star-off"
+              circle
+              plain
+              @click="like()"
+            ></el-button>
+          </el-row>
         </li>
         <li>发布时间：{{ videoDetail.createTime }}</li>
         <li>简介：{{ videoDetail.description }}</li>
@@ -26,6 +47,7 @@
   </div>
 </template>
 <script>
+  //视频
   const category = 1
   import Comment from '../common/comment'
 
@@ -65,8 +87,28 @@
         })
     },
     methods: {
-      async showComment(category, articleId) {
-        this.$refs.comment.showComment(category, articleId)
+      like() {
+        this.$axios
+          .get('/manage_center/like/edit', {
+            params: {
+              bool: !this.videoDetail.isLike,
+              dataCategory: this.category,
+              dataId: this.videoDetail.id,
+            },
+          })
+          .then((res) => {
+            if (this.videoDetail.isLike) {
+              this.$message('已取消收藏')
+            } else {
+              this.$message('已收藏')
+            }
+          })
+          .then((res) => {
+            this.videoDetail.isLike = !this.videoDetail.isLike
+          })
+      },
+      async showComment(category, videoId) {
+        this.$refs.comment.showComment(category, videoId)
         this.commentVisible = true
       },
     },

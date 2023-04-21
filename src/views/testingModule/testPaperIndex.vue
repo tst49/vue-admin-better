@@ -41,6 +41,21 @@
             </el-tag>
             <el-divider direction="vertical"></el-divider>
             {{ testPaper.title }}
+            <el-button
+              v-if="testPaper.isLike"
+              type="warning"
+              icon="el-icon-star-on"
+              circle
+              disabled
+            ></el-button>
+            <el-button
+              v-else
+              type="warning"
+              icon="el-icon-star-off"
+              circle
+              plain
+              disabled
+            ></el-button>
           </div>
           知识点：
           <el-tag v-for="tag in testPaper.tags" :key="tag">

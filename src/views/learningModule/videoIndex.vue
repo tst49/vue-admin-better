@@ -38,6 +38,23 @@
           <div class="list-card-body">
             <div class="tags">
               <el-tag v-for="tag in video.tags" :key="tag">{{ tag }}</el-tag>
+              <el-button
+                v-if="video.isLike"
+                style="margin-left: 15px"
+                type="warning"
+                icon="el-icon-star-on"
+                circle
+                @click="like(video)"
+              ></el-button>
+              <el-button
+                v-else
+                style="margin-left: 15px"
+                type="warning"
+                icon="el-icon-star-off"
+                circle
+                plain
+                @click="like(video)"
+              ></el-button>
             </div>
             <img
               :src="video.thumbnail"
@@ -127,6 +144,26 @@
           })
           .then(() => {
             this.listLoading = false
+          })
+      },
+      like(video) {
+        this.$axios
+          .get('/manage_center/like/edit', {
+            params: {
+              bool: !video.isLike,
+              dataCategory: this.category,
+              dataId: video.id,
+            },
+          })
+          .then((res) => {
+            if (video.isLike) {
+              this.$message('已取消收藏')
+            } else {
+              this.$message('已收藏')
+            }
+          })
+          .then((res) => {
+            video.isLike = !video.isLike
           })
       },
       handleSizeChange(val) {

@@ -45,7 +45,7 @@
         </el-radio-group>
         <el-input
           v-else
-          v-model.trim="form.answer[0]"
+          v-model.trim="form.answer"
           autocomplete="off"
         ></el-input>
       </el-form-item>
@@ -142,7 +142,7 @@
           id: '',
           content: '',
           options: ['', '', '', ''],
-          answer: [],
+          answer: '',
           tags: [],
           category: 1,
           level: 1,

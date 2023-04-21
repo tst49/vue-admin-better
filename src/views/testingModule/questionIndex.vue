@@ -135,9 +135,30 @@
         <el-table-column
           show-overflow-tooltip
           label="题目"
-          prop="title"
           width="400px"
-        ></el-table-column>
+          align="left"
+        >
+          <template #default="{ row }">
+            <el-row>
+              <el-button
+                v-if="row.isLike"
+                type="warning"
+                icon="el-icon-star-on"
+                circle
+                disabled
+              ></el-button>
+              <el-button
+                v-else
+                type="warning"
+                icon="el-icon-star-off"
+                circle
+                plain
+                disabled
+              ></el-button>
+              <span>{{ row.title }}</span>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column label="题型">
           <template #default="{ row }">
             <el-tag :type="row.category | categoryFilter">
