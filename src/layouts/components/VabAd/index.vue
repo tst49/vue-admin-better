@@ -31,13 +31,13 @@
       }
     },
     created() {
-      this.fetchData()
+      // this.fetchData()
     },
     methods: {
-      async fetchData() {
-        const { data } = await getList()
-        this.adList = data
-      },
+      // async fetchData() {
+      //   const { data } = await getList()
+      //   this.adList = data
+      // },
     },
   }
 </script>

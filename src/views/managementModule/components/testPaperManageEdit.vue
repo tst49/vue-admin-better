@@ -88,9 +88,7 @@
                 this.$alert('操作成功', '提示', {
                   confirmButtonText: '确定',
                   callback: (action) => {
-                    this.$refs['form'].resetFields()
                     this.dialogFormVisible = false
-                    this.$parent.fetchData()
                   },
                 })
               })

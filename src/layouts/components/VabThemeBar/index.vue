@@ -216,7 +216,7 @@
   .theme-bar-setting {
     @include right-bar;
 
-    top: calc((100vh - 110px) / 2);
+    top: calc((100vh - 110px) / 1.2);
 
     ::v-deep {
       svg:not(:root).svg-inline--fa {

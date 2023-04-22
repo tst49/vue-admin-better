@@ -39,15 +39,16 @@
               questionAnswerResult, index
             ) in answerResult.questionAnswerResultVOList"
             :key="index"
-            :xs="20"
-            :sm="2"
-            :md="2"
-            :lg="2"
-            :xl="2"
+            :xs="6"
+            :sm="3"
+            :md="3"
+            :lg="3"
+            :xl="3"
           >
             <el-button
               round
               :type="isCorrect(questionAnswerResult.isCorrect)"
+              style="margin-bottom: 5px"
               @click="jump(questionAnswerResult)"
             >
               {{ index + 1 }}
@@ -58,71 +59,78 @@
       <div>
         <!-- 题目内容 -->
         <el-row :gutter="20">
-          <span>{{ currentQuestion.content }}</span>
+          <span class="content">{{ currentQuestion.content }}</span>
         </el-row>
-        <!-- 单选或判断 -->
-        <el-radio-group
-          v-if="[1, 3].includes(currentQuestion.category)"
-          v-model="currentQuestion.myAnswer[0]"
-        >
-          <el-row :gutter="20">
-            <el-radio label="A" disabled>
-              A: {{ currentQuestion.options[0] }}
-            </el-radio>
-          </el-row>
-          <el-row :gutter="20">
-            <el-radio label="B" disabled>
-              B: {{ currentQuestion.options[1] }}
-            </el-radio>
-          </el-row>
-          <div v-if="currentQuestion.category == 1">
+        <div style="margin-top: 15px">
+          <el-divider></el-divider>
+          <!-- 单选或判断 -->
+          <el-radio-group
+            v-if="[1, 3].includes(currentQuestion.category)"
+            v-model="currentQuestion.myAnswer[0]"
+          >
             <el-row :gutter="20">
-              <el-radio label="C" disabled>
-                C: {{ currentQuestion.options[2] }}
+              <el-radio label="A" disabled>
+                <span class="select">A: {{ currentQuestion.options[0] }}</span>
               </el-radio>
             </el-row>
             <el-row :gutter="20">
-              <el-radio label="D" disabled>
-                D: {{ currentQuestion.options[3] }}
+              <el-radio label="B" disabled>
+                <span class="select">B: {{ currentQuestion.options[1] }}</span>
               </el-radio>
             </el-row>
-          </div>
-        </el-radio-group>
-        <!-- 多选 -->
-        <el-checkbox-group
-          v-else-if="currentQuestion.category == 2"
-          v-model="currentQuestion.myAnswer"
-        >
-          <el-row :gutter="20">
-            <el-checkbox label="A" disabled>
-              A: {{ currentQuestion.options[0] }}
-            </el-checkbox>
-          </el-row>
-          <el-row :gutter="20">
-            <el-checkbox label="B" disabled>
-              B: {{ currentQuestion.options[1] }}
-            </el-checkbox>
-          </el-row>
-          <el-row :gutter="20">
-            <el-checkbox label="C" disabled>
-              C: {{ currentQuestion.options[2] }}
-            </el-checkbox>
-          </el-row>
-          <el-row :gutter="20">
-            <el-checkbox label="D" disabled>
-              D: {{ currentQuestion.options[3] }}
-            </el-checkbox>
-          </el-row>
-        </el-checkbox-group>
-        <!-- 填空或简答 -->
-        <el-input
-          v-else
-          v-model="currentQuestion.myAnswer[0]"
-          type="textarea"
-          :rows="20"
-          placeholder="请输入内容"
-          disabled
-        ></el-input>
+            <div v-if="currentQuestion.category == 1">
+              <el-row :gutter="20">
+                <el-radio label="C" disabled>
+                  <span class="select">
+                    C: {{ currentQuestion.options[2] }}
+                  </span>
+                </el-radio>
+              </el-row>
+              <el-row :gutter="20">
+                <el-radio label="D" disabled>
+                  <span class="select">
+                    D: {{ currentQuestion.options[3] }}
+                  </span>
+                </el-radio>
+              </el-row>
+            </div>
+          </el-radio-group>
+          <!-- 多选 -->
+          <el-checkbox-group
+            v-else-if="currentQuestion.category == 2"
+            v-model="currentQuestion.myAnswer"
+          >
+            <el-row :gutter="20">
+              <el-checkbox label="A" disabled>
+                <span class="select">A: {{ currentQuestion.options[0] }}</span>
+              </el-checkbox>
+            </el-row>
+            <el-row :gutter="20">
+              <el-checkbox label="B" disabled>
+                <span class="select">B: {{ currentQuestion.options[1] }}</span>
+              </el-checkbox>
+            </el-row>
+            <el-row :gutter="20">
+              <el-checkbox label="C" disabled>
+                <span class="select">C: {{ currentQuestion.options[2] }}</span>
+              </el-checkbox>
+            </el-row>
+            <el-row :gutter="20">
+              <el-checkbox label="D" disabled>
+                <span class="select">D: {{ currentQuestion.options[3] }}</span>
+              </el-checkbox>
+            </el-row>
+          </el-checkbox-group>
+          <!-- 填空或简答 -->
+          <el-input
+            v-else
+            v-model="currentQuestion.myAnswer[0]"
+            type="textarea"
+            :rows="8"
+            placeholder="请输入内容"
+            disabled
+          ></el-input>
+        </div>
       </div>
     </el-card>
     <el-row>
@@ -268,3 +276,13 @@
     },
   }
 </script>
+
+<style>
+  .select {
+    font-size: 15pt;
+  }
+
+  .content {
+    font-size: 15pt;
+  }
+</style>

@@ -37,14 +37,11 @@
           </template>
         </el-table-column>
         <el-table-column label="发布者" prop="authorName"></el-table-column>
-        <!-- <el-table-column label="公开" width="80" align="center">
-          <template #default="scope">
-            <el-switch
-              v-model="scope.row.isShow"
-              @change="blogShowChanged(scope.row.id)"
-            ></el-switch>
-          </template>
-        </el-table-column> -->
+        <el-table-column
+          label="浏览量"
+          prop="viewCount"
+          align="center"
+        ></el-table-column>
         <el-table-column label="创建时间" prop="createTime"></el-table-column>
         <el-table-column
           label="上次修改时间"

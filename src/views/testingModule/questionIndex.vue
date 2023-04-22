@@ -25,15 +25,11 @@
         <el-select
           v-model="queryForm.questionTags"
           multiple
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请输入知识点"
+        ></el-select>
       </el-row>
       <el-row>
         <vab-icon :icon="['fas', 'search']"></vab-icon>
@@ -351,8 +347,9 @@
       quickTest() {
         this.queryForm.testNow = true
         this.$axios.post('/testing/paper/init', this.queryForm).then((res) => {
+          console.log(res.data.data)
           this.$router.push({
-            path: '/testing/paper',
+            path: '/paper',
             query: { data: res.data.data },
           })
         })

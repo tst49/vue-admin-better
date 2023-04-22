@@ -62,10 +62,14 @@
               @click="showVideoDetail(video.id)"
             />
             <div style="padding: 5px">
-              <span>{{ video.title }}</span>
-              <div class="bottom clearfix">
-                <p>发布者：{{ video.authorName }}</p>
-              </div>
+              <span style="font-size: 15pt; color: blue">
+                {{ video.title }}
+              </span>
+              <el-row style="margin-top: 5px">
+                <span>发布者：{{ video.authorName }}</span>
+                <el-divider direction="vertical"></el-divider>
+                <span>播放量：{{ video.viewCount }}</span>
+              </el-row>
             </div>
           </div>
         </el-card>
@@ -210,7 +214,6 @@
   }
 
   .bottom {
-    margin-top: 13px;
     line-height: 12px;
   }
 

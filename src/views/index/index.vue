@@ -345,8 +345,8 @@
           },
           {
             icon: 'bullhorn',
-            title: '我的作业',
-            link: '',
+            title: '收藏夹',
+            link: 'favorites',
             color: '#ff85c0',
           },
           {
@@ -359,7 +359,7 @@
           {
             icon: 'balance-scale-left',
             title: '答题详情',
-            link: '',
+            link: 'answer/record/index',
             color: '#ff9c6e',
           },
           {

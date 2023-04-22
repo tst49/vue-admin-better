@@ -49,6 +49,7 @@
 
             <p>最近更新于：{{ article.modifyTime }}</p>
             <p>文章摘要：{{ article.description }}</p>
+            <p>浏览量：{{ article.viewCount }}</p>
           </el-card>
         </el-timeline-item>
       </el-timeline>

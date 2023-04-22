@@ -37,6 +37,7 @@
           </el-row>
         </li>
         <li>发布时间：{{ videoDetail.createTime }}</li>
+        <li>播放量：{{ videoDetail.viewCount }}</li>
         <li>简介：{{ videoDetail.description }}</li>
       </ul>
     </div>

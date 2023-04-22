@@ -7,55 +7,73 @@
   >
     <!-- 题目内容 -->
     <el-row :gutter="20">
-      <span>{{ currentQuestion.content }}</span>
+      <span class="content">{{ currentQuestion.content }}</span>
     </el-row>
-    <!-- 单选或判断 -->
-    <el-radio-group
-      v-if="[1, 3].includes(currentQuestion.category)"
-      v-model="currentQuestion.answer[0]"
-    >
-      <el-row :gutter="20">
-        <el-radio label="A">A: {{ currentQuestion.options[0] }}</el-radio>
-      </el-row>
-      <el-row :gutter="20">
-        <el-radio label="B">B: {{ currentQuestion.options[1] }}</el-radio>
-      </el-row>
-      <div v-if="currentQuestion.category == 1">
+    <div style="margin-top: 15px">
+      <el-divider></el-divider>
+      <!-- 单选或判断 -->
+      <el-radio-group
+        v-if="[1, 3].includes(currentQuestion.category)"
+        v-model="currentQuestion.answer[0]"
+      >
         <el-row :gutter="20">
-          <el-radio label="C">C: {{ currentQuestion.options[2] }}</el-radio>
+          <el-radio label="A">
+            <span class="select">A: {{ currentQuestion.options[0] }}</span>
+          </el-radio>
         </el-row>
         <el-row :gutter="20">
-          <el-radio label="D">D: {{ currentQuestion.options[3] }}</el-radio>
+          <el-radio label="B">
+            <span class="select">B: {{ currentQuestion.options[1] }}</span>
+          </el-radio>
         </el-row>
-      </div>
-    </el-radio-group>
-    <!-- 多选 -->
-    <el-checkbox-group
-      v-else-if="currentQuestion.category == 2"
-      v-model="currentQuestion.answer"
-    >
-      <el-row :gutter="20">
-        <el-checkbox label="A">A: {{ currentQuestion.options[0] }}</el-checkbox>
-      </el-row>
-      <el-row :gutter="20">
-        <el-checkbox label="B">B: {{ currentQuestion.options[1] }}</el-checkbox>
-      </el-row>
-      <el-row :gutter="20">
-        <el-checkbox label="C">C: {{ currentQuestion.options[2] }}</el-checkbox>
-      </el-row>
-      <el-row :gutter="20">
-        <el-checkbox label="D">D: {{ currentQuestion.options[3] }}</el-checkbox>
-      </el-row>
-    </el-checkbox-group>
-    <!-- 填空或简答 -->
-    <el-input
-      v-else
-      v-model="currentQuestion.answer[0]"
-      type="textarea"
-      :rows="3"
-      autosize
-      placeholder="请输入内容"
-    ></el-input>
+        <div v-if="currentQuestion.category == 1">
+          <el-row :gutter="20">
+            <el-radio label="C">
+              <span class="select">C: {{ currentQuestion.options[2] }}</span>
+            </el-radio>
+          </el-row>
+          <el-row :gutter="20">
+            <el-radio label="D">
+              <span class="select">D: {{ currentQuestion.options[3] }}</span>
+            </el-radio>
+          </el-row>
+        </div>
+      </el-radio-group>
+      <!-- 多选 -->
+      <el-checkbox-group
+        v-else-if="currentQuestion.category == 2"
+        v-model="currentQuestion.answer"
+      >
+        <el-row :gutter="20">
+          <el-checkbox label="A">
+            <span class="select">A: {{ currentQuestion.options[0] }}</span>
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="B">
+            <span class="select">B: {{ currentQuestion.options[1] }}</span>
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="C">
+            <span class="select">C: {{ currentQuestion.options[2] }}</span>
+          </el-checkbox>
+        </el-row>
+        <el-row :gutter="20">
+          <el-checkbox label="D">
+            <span class="select">D: {{ currentQuestion.options[3] }}</span>
+          </el-checkbox>
+        </el-row>
+      </el-checkbox-group>
+      <!-- 填空或简答 -->
+      <el-input
+        v-else
+        v-model="currentQuestion.answer[0]"
+        type="textarea"
+        :rows="8"
+        placeholder="请输入内容"
+      ></el-input>
+    </div>
     <!-- 操作面板 -->
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
@@ -116,7 +134,7 @@
         this.currentQuestion = this.$options.data().currentQuestion
         this.dialogFormVisible = false
         this.answerResultVisible = false
-        this.$emit('fetch-data')
+        this.$parent.fetchData()
       },
       submit() {
         this.$refs.checkAnswer.checkAnswer(
@@ -129,3 +147,13 @@
     },
   }
 </script>
+
+<style>
+  .select {
+    font-size: 15pt;
+  }
+
+  .content {
+    font-size: 15pt;
+  }
+</style>
