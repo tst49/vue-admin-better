@@ -56,7 +56,7 @@
         >
           <template #default="{ row }">
             <el-popover
-              v-model="visible"
+              v-model="row.visible"
               placement="bottom"
               title="指导班级信息"
               trigger="manual"
@@ -81,7 +81,7 @@
               <el-button
                 slot="reference"
                 type="text"
-                @click="showLeaderClazz(row.id)"
+                @click="showLeaderClazz(row)"
               >
                 {{ row.leaderClazzNum }}
               </el-button>
@@ -106,7 +106,6 @@
         teacherTableList: [],
         teachersearch: '',
         teacherIds: [],
-        visible: false,
         clazzCountDetail: [],
 
         listLoading: true,
@@ -147,12 +146,16 @@
             })
           })
       },
-      showLeaderClazz(id) {
-        this.visible = !this.visible
+      showLeaderClazz(row) {
+        if (row.visible) {
+          row.visible = false
+          return
+        }
+        row.visible = true
         this.$axios
           .get('/manage_center/auth/teacher/clazzCountDetail', {
             params: {
-              teacherId: id,
+              teacherId: row.id,
             },
           })
           .then((res) => {

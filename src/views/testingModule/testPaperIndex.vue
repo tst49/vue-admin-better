@@ -105,9 +105,9 @@
     filters: {
       statusFilter(status) {
         const statusMap = {
-          未开始: 'info',
-          尝试过: 'warning',
-          已解答: 'success',
+          未尝试: 'info',
+          不及格: 'danger',
+          已通过: 'success',
         }
         return statusMap[status]
       },

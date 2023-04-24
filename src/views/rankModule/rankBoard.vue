@@ -17,7 +17,7 @@
         <el-table-column label="排名" type="index" width="55px">
           <template #default="scope">
             <i
-              v-if="[1, 2, 3].includes(scope.$index + 1)"
+              v-if="[0, 1, 2].includes(scope.$index)"
               class="el-icon-trophy"
               :class="[
                 scope.$index + 1 == '1'
@@ -41,6 +41,21 @@
         <el-table-column label="姓名" prop="nickname"></el-table-column>
         <el-table-column label="班级" prop="clazzName"></el-table-column>
       </el-table>
+      <el-divider><span style="color: blue">我的排名</span></el-divider>
+      <el-row>
+        <el-col :span="5" :offset="1">
+          <span style="color: blue">{{ myScoreRank.no }}</span>
+        </el-col>
+        <el-col :span="5">
+          <span style="color: blue">{{ myScoreRank.num }}</span>
+        </el-col>
+        <el-col :span="7">
+          <span style="color: blue">{{ myScoreRank.nickname }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span style="color: blue">{{ myScoreRank.clazzName }}</span>
+        </el-col>
+      </el-row>
     </el-card>
     <el-card style="width: 33%; float: left">
       <div slot="header">
@@ -83,6 +98,21 @@
         <el-table-column label="姓名" prop="nickname"></el-table-column>
         <el-table-column label="班级" prop="clazzName"></el-table-column>
       </el-table>
+      <el-divider><span style="color: blue">我的排名</span></el-divider>
+      <el-row>
+        <el-col :span="5" :offset="1">
+          <span style="color: blue">{{ myTotalRank.no }}</span>
+        </el-col>
+        <el-col :span="5">
+          <span style="color: blue">{{ myTotalRank.num }}</span>
+        </el-col>
+        <el-col :span="7">
+          <span style="color: blue">{{ myTotalRank.nickname }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span style="color: blue">{{ myTotalRank.clazzName }}</span>
+        </el-col>
+      </el-row>
     </el-card>
     <el-card style="width: 33%; float: left">
       <div slot="header">
@@ -125,6 +155,21 @@
         <el-table-column label="姓名" prop="nickname"></el-table-column>
         <el-table-column label="班级" prop="clazzName"></el-table-column>
       </el-table>
+      <el-divider><span style="color: blue">我的排名</span></el-divider>
+      <el-row>
+        <el-col :span="5" :offset="1">
+          <span style="color: blue">{{ myCorrectRank.no }}</span>
+        </el-col>
+        <el-col :span="5">
+          <span style="color: blue">{{ myCorrectRank.num }}</span>
+        </el-col>
+        <el-col :span="7">
+          <span style="color: blue">{{ myCorrectRank.nickname }}</span>
+        </el-col>
+        <el-col :span="6">
+          <span style="color: blue">{{ myCorrectRank.clazzName }}</span>
+        </el-col>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -134,8 +179,11 @@
     data() {
       return {
         scoreRank: [],
+        myScoreRank: {},
         totalRank: [],
+        myTotalRank: {},
         correctRank: [],
+        myCorrectRank: {},
 
         elementLoadingText: '正在加载...',
         scoreLoading: true,
@@ -159,7 +207,8 @@
         this.$axios
           .get('/scoreBoard/rank/score')
           .then((res) => {
-            this.scoreRank = res.data.data
+            this.scoreRank = res.data.data.board
+            this.myScoreRank = res.data.data.myRank
           })
           .then(() => {
             this.scoreLoading = false
@@ -170,7 +219,8 @@
         this.$axios
           .get('/scoreBoard/rank/total')
           .then((res) => {
-            this.totalRank = res.data.data
+            this.totalRank = res.data.data.board
+            this.myTotalRank = res.data.data.myRank
           })
           .then(() => {
             this.totalLoading = false
@@ -181,7 +231,8 @@
         this.$axios
           .get('/scoreBoard/rank/correct')
           .then((res) => {
-            this.correctRank = res.data.data
+            this.correctRank = res.data.data.board
+            this.myCorrectRank = res.data.data.myRank
           })
           .then(() => {
             this.correctLoading = false

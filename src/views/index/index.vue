@@ -10,7 +10,6 @@
           <div class="bottom">
             <span>
               日均学习时长:
-
               {{ config1.endVal }}
             </span>
           </div>
@@ -56,7 +55,7 @@
 
 <script>
   import VabChart from '@/plugins/echarts'
-  import { getList } from '@/api/changeLog'
+  // import { getList } from '@/api/changeLog'
 
   export default {
     name: 'Index',
@@ -180,143 +179,6 @@
             },
           ],
         },
-        //词云
-        cy: {
-          grid: {
-            top: '4%',
-            left: '2%',
-            right: '4%',
-            bottom: '0%',
-          },
-          series: [
-            {
-              type: 'wordCloud',
-              gridSize: 15,
-              sizeRange: [12, 40],
-              rotationRange: [0, 0],
-              width: '100%',
-              height: '100%',
-              textStyle: {
-                normal: {
-                  color() {
-                    const arr = [
-                      '#5470c6',
-                      '#91cc75',
-                      '#fac858',
-                      '#ee6666',
-                      '#73c0de',
-                      '#975FE5',
-                    ]
-                    let index = Math.floor(Math.random() * arr.length)
-                    return arr[index]
-                  },
-                },
-              },
-              data: [
-                {
-                  name: 'vue-admin-better',
-                  value: 15000,
-                },
-                {
-                  name: 'element',
-                  value: 10081,
-                },
-                {
-                  name: 'beautiful',
-                  value: 9386,
-                },
-
-                {
-                  name: 'vue',
-                  value: 6500,
-                },
-                {
-                  name: 'chuzhixin',
-                  value: 6000,
-                },
-                {
-                  name: 'good',
-                  value: 4500,
-                },
-                {
-                  name: 'success',
-                  value: 3800,
-                },
-                {
-                  name: 'never',
-                  value: 3000,
-                },
-                {
-                  name: 'boy',
-                  value: 2500,
-                },
-                {
-                  name: 'girl',
-                  value: 2300,
-                },
-                {
-                  name: 'github',
-                  value: 2000,
-                },
-                {
-                  name: 'hbuilder',
-                  value: 1900,
-                },
-                {
-                  name: 'dcloud',
-                  value: 1800,
-                },
-                {
-                  name: 'china',
-                  value: 1700,
-                },
-                {
-                  name: '1204505056',
-                  value: 1600,
-                },
-                {
-                  name: '972435319',
-                  value: 1500,
-                },
-                {
-                  name: 'young',
-                  value: 1200,
-                },
-                {
-                  name: 'old',
-                  value: 1100,
-                },
-                {
-                  name: 'vuex',
-                  value: 900,
-                },
-                {
-                  name: 'router',
-                  value: 800,
-                },
-                {
-                  name: 'money',
-                  value: 700,
-                },
-                {
-                  name: 'qingdao',
-                  value: 800,
-                },
-                {
-                  name: 'yantai',
-                  value: 9000,
-                },
-                {
-                  name: 'author is very cool',
-                  value: 9200,
-                },
-              ],
-            },
-          ],
-        },
-
-        //其他信息
-        userAgent: navigator.userAgent,
         //卡片图标
         iconList: [
           {
@@ -381,23 +243,18 @@
       let base = +new Date(2020, 1, 1)
       let oneDay = 24 * 3600 * 1000
       let date = []
-
       let data = [Math.random() * 1500]
       let now = new Date(base)
-
       const addData = (shift) => {
         now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
         date.push(now)
         data.push(this.$baseLodash.random(20000, 60000))
-
         if (shift) {
           date.shift()
           data.shift()
         }
-
         now = new Date(+new Date(now) + oneDay)
       }
-
       for (let i = 1; i < 6; i++) {
         addData()
       }

@@ -5,6 +5,11 @@ import router from './router'
 import './plugins'
 import '@/layouts/export'
 
+// // 全局引入相关包
+// import * as echarts from 'echarts'
+// // 开启echarts
+// Vue.prototype.$echarts = echarts
+
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import 'github-markdown-css'
