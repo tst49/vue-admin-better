@@ -45,6 +45,27 @@
       <el-form-item label="学校">
         <el-input v-model="form.school" disabled></el-input>
       </el-form-item>
+      <el-form-item label="身份">
+        <el-row>
+          <el-col
+            v-for="(role, index) in form.roles"
+            :key="index"
+            :xs="12"
+            :sm="6"
+            :md="3"
+            :lg="3"
+            :xl="3"
+          >
+            <el-card class="icon-panel" shadow="never">
+              <vab-icon
+                :style="{ color: getIconStyle(role) }"
+                :icon="['fas', getIcon(role)]"
+              ></vab-icon>
+              <p>{{ role }}</p>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-form-item>
       <el-form-item label="班级">
         <el-button
           v-if="form.bindStatus == 0"
@@ -138,6 +159,7 @@
           gender: null,
           birthday: '',
           bindStatus: null,
+          roles: [],
         },
         loading: false,
       }
@@ -209,6 +231,26 @@
       handleExceed(files, fileList) {
         this.$baseMessage(`只能选择一张图片做头像哦`, 'error')
       },
+      getIconStyle(role) {
+        switch (role) {
+          case 'student':
+            return '#95de64'
+          case 'teacher':
+            return '#69c0ff'
+          case 'admin':
+            return '#ff9c6e'
+        }
+      },
+      getIcon(role) {
+        switch (role) {
+          case 'student':
+            return 'user'
+          case 'teacher':
+            return 'user-graduate'
+          case 'admin':
+            return 'user-cog'
+        }
+      },
     },
   }
 </script>
@@ -244,6 +286,20 @@
           }
         }
       }
+    }
+  }
+
+  .icon-panel {
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+
+    svg {
+      font-size: 30px;
+    }
+
+    p {
+      margin-top: 5px;
     }
   }
 </style>

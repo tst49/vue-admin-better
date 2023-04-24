@@ -216,7 +216,7 @@ export const asyncRoutes = [
         component: () => import('@/views/personalCenter/myComment'),
         meta: {
           title: '我的讨论',
-          permissions: ['student', 'teacher'],
+          permissions: ['student', 'teacher', 'admin'],
         },
       },
       // {
@@ -289,7 +289,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/studentManagement'),
         meta: {
           title: '学生管理',
-          permissions: ['teacher', 'admin'],
+          permissions: ['admin'],
         },
       },
       {
@@ -298,7 +298,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/clazzManagement'),
         meta: {
           title: '班级管理',
-          permissions: ['teacher', 'admin'],
+          permissions: ['admin'],
         },
       },
       {
@@ -307,7 +307,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/authManagement'),
         meta: {
           title: '权限管理',
-          permissions: ['teacher', 'admin'],
+          permissions: ['admin'],
         },
       },
       {
@@ -325,7 +325,7 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/articleManagement'),
         meta: {
           title: '资料库管理',
-          permissions: ['teacher', 'admin'],
+          permissions: ['admin'],
         },
       },
       {
@@ -352,13 +352,13 @@ export const asyncRoutes = [
         component: () => import('@/views/managementModule/commentManagement'),
         meta: {
           title: '讨论区管理',
-          permissions: ['teacher', 'admin'],
+          permissions: ['admin'],
         },
       },
       {
         path: '/pointsRules/management',
         name: 'PointsRulesManagement',
-        component: () => import('@/views/vab/nested/menu1/index'),
+        component: () => import('@/views/managementModule/pointRuleManagement'),
         meta: {
           title: '积分规则管理',
           permissions: ['admin'],

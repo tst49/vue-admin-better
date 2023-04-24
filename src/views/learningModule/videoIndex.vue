@@ -1,11 +1,15 @@
 <template>
   <div>
     <video-up ref="vabUpload"></video-up>
-    <el-button type="primary" @click="handleShow({ key: 'value' })">
-      模拟上传
+    <el-button
+      v-permissions="['teacher', 'admin']"
+      type="primary"
+      @click="handleShow({ key: 'value' })"
+    >
+      上传视频
     </el-button>
     <el-divider content-position="center">
-      <span style="color: red; font-size: 20pt">最新发布</span>
+      <span style="color: red; font-size: 15pt">最新发布</span>
     </el-divider>
     <el-carousel trigger="click" :interval="4000" type="card" height="300px">
       <el-carousel-item v-for="(newVideo, index) in newVideoList" :key="index">

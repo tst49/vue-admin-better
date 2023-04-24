@@ -57,7 +57,11 @@
           </el-checkbox-button>
         </el-checkbox-group>
       </el-row>
-      <el-button type="primary" @click="generatePaper">
+      <el-button
+        v-permissions="['teacher', 'admin']"
+        type="primary"
+        @click="generatePaper"
+      >
         生成试卷
         <i class="el-icon-upload el-icon--right"></i>
       </el-button>
