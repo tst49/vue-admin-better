@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-card style="width: 51%; float: left; height: 365px">
+    <el-card style="width: 51.5%; float: left; height: 365px">
       <el-transfer
         v-model="teacherIds"
         style="text-align: left; display: inline-block; height: 350px"
@@ -95,16 +95,96 @@
         ></el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 管理员列表 -->
+    <el-card style="float: left; width: 99.5%">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button
+            v-permissions="['super']"
+            icon="el-icon-plus"
+            type="primary"
+            @click="handleEdit()"
+          >
+            添加
+          </el-button>
+          <el-form
+            ref="form"
+            :model="queryForm"
+            :inline="true"
+            @submit.native.prevent
+          >
+            <el-form-item>
+              <el-input
+                v-model="queryForm.key"
+                placeholder="输入名称"
+                clearable
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                icon="el-icon-search"
+                type="primary"
+                native-type="submit"
+                @click="queryAdmin()"
+              >
+                查询
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+
+      <el-table
+        ref="tableSort"
+        v-loading="listLoadingad"
+        :data="adminList"
+        :element-loading-text="elementLoadingText"
+        stripe
+      >
+        <el-table-column
+          show-overflow-tooltip
+          prop="adminName"
+          label="管理员名称"
+        ></el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="school"
+          label="学校"
+        ></el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          prop="createTime"
+          label="创建时间"
+        ></el-table-column>
+        <el-table-column show-overflow-tooltip label="操作" width="180px">
+          <template #default="{ row }">
+            <el-button
+              v-permissions="['super']"
+              type="text"
+              @click="handleEdit(row)"
+            >
+              移除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+    <table-edit ref="edit"></table-edit>
   </div>
 </template>
 
 <script>
+  import TableEdit from './components/authAdminEdit'
+
   export default {
+    components: {
+      TableEdit,
+    },
     data() {
       return {
         userData: [],
         teacherTableList: [],
-        teachersearch: '',
         teacherIds: [],
         clazzCountDetail: [],
 
@@ -115,10 +195,14 @@
         elementLoadingText: '正在加载...',
         queryForm: {},
         leaders: [],
+
+        adminList: [],
+        listLoadingad: true,
       }
     },
     created() {
       this.fetchTeacherData()
+      this.queryAdmin()
     },
     methods: {
       setTeacher() {
@@ -189,6 +273,24 @@
         } else {
           return '用户未设置'
         }
+      },
+      queryAdmin() {
+        this.listLoadingad = true
+        this.$axios
+          .get('/manage_center/auth/admin/list', {
+            params: {
+              key: this.queryForm.key,
+            },
+          })
+          .then((res) => {
+            this.adminList = res.data.data
+          })
+          .then((res) => {
+            this.listLoadingad = false
+          })
+      },
+      handleEdit() {
+        this.$refs['edit'].showEdit()
       },
     },
   }

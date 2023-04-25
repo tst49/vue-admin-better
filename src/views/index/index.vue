@@ -206,16 +206,16 @@
             color: '#5cdbd3',
           },
           {
-            icon: 'bullhorn',
+            icon: 'folder-open',
             title: '收藏夹',
             link: 'favorites',
             color: '#ff85c0',
           },
           {
-            icon: 'gift',
-            title: '我的积分',
-            link: '',
-            color: '#ffd666',
+            icon: 'chart-bar',
+            title: '数据分析',
+            link: 'data/statistic',
+            color: '#95de64',
           },
 
           {
@@ -225,10 +225,10 @@
             color: '#ff9c6e',
           },
           {
-            icon: 'coffee',
-            title: '休息一下',
-            link: '',
-            color: '#95de64',
+            icon: 'coins',
+            title: '我的积分',
+            link: 'rank/board',
+            color: '#ffd666',
           },
         ],
       }

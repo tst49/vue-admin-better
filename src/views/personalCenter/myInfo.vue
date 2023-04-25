@@ -66,7 +66,7 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="班级">
+      <el-form-item v-if="form.bindStatus != 4" label="班级">
         <el-button
           v-if="form.bindStatus == 0"
           type="text"
@@ -239,6 +239,8 @@
             return '#69c0ff'
           case 'admin':
             return '#ff9c6e'
+          case 'super':
+            return '#fec412'
         }
       },
       getIcon(role) {
@@ -249,6 +251,8 @@
             return 'user-graduate'
           case 'admin':
             return 'user-cog'
+          case 'super':
+            return 'user-secret'
         }
       },
     },

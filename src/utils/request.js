@@ -18,29 +18,6 @@ import { isArray } from '@/utils/validate'
 
 let loadingInstance
 
-/**
- * @description 处理code异常
- * @param {*} code
- * @param {*} msg
- */
-const handleCode = (code, msg) => {
-  switch (code) {
-    case invalidCode:
-      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
-      store.dispatch('user/resetAccessToken').catch(() => {})
-      if (loginInterception) {
-        location.reload()
-      }
-      break
-    case noPermissionCode:
-      router.push({ path: '/401' }).catch(() => {})
-      break
-    default:
-      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
-      break
-  }
-}
-
 const instance = axios.create({
   baseURL,
   timeout: requestTimeout,
@@ -80,19 +57,34 @@ instance.interceptors.response.use(
     if (loadingInstance) loadingInstance.close()
 
     const { data, config } = response
-    const { code, msg } = data
     // 操作正常Code数组
     const codeVerificationArray = isArray(successCode)
       ? [...successCode]
       : [...[successCode]]
     // 是否操作正常
+    const code = response.data.code
+    const msg = response.data.message
     if (codeVerificationArray.includes(code)) {
       return data
     } else {
-      handleCode(code, msg)
+      switch (code) {
+        case invalidCode:
+          Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
+          store.dispatch('user/resetAccessToken').catch(() => {})
+          if (loginInterception) {
+            location.reload()
+          }
+          break
+        case noPermissionCode:
+          router.push({ path: '/401' }).catch(() => {})
+          break
+        default:
+          Vue.prototype.$baseMessage(msg, 'error')
+          break
+      }
       return Promise.reject(
-        'vue-admin-beautiful请求异常拦截:' +
-          JSON.stringify({ url: config.url, code, msg }) || 'Error'
+        '请求异常拦截:' + JSON.stringify({ url: config.url, code, msg }) ||
+          'Error'
       )
     }
   },

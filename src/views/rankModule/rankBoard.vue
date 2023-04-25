@@ -44,12 +44,12 @@
       <el-divider><span style="color: blue">我的排名</span></el-divider>
       <el-row>
         <el-col :span="5" :offset="1">
-          <span style="color: blue">{{ myScoreRank.no }}</span>
+          <span style="color: blue">{{ parseNo(myScoreRank.no) }}</span>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <span style="color: blue">{{ myScoreRank.num }}</span>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <span style="color: blue">{{ myScoreRank.nickname }}</span>
         </el-col>
         <el-col :span="6">
@@ -101,12 +101,12 @@
       <el-divider><span style="color: blue">我的排名</span></el-divider>
       <el-row>
         <el-col :span="5" :offset="1">
-          <span style="color: blue">{{ myTotalRank.no }}</span>
+          <span style="color: blue">{{ parseNo(myTotalRank.no) }}</span>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <span style="color: blue">{{ myTotalRank.num }}</span>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <span style="color: blue">{{ myTotalRank.nickname }}</span>
         </el-col>
         <el-col :span="6">
@@ -158,12 +158,12 @@
       <el-divider><span style="color: blue">我的排名</span></el-divider>
       <el-row>
         <el-col :span="5" :offset="1">
-          <span style="color: blue">{{ myCorrectRank.no }}</span>
+          <span style="color: blue">{{ parseNo(myCorrectRank.no) }}</span>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="6">
           <span style="color: blue">{{ myCorrectRank.num }}</span>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="6">
           <span style="color: blue">{{ myCorrectRank.nickname }}</span>
         </el-col>
         <el-col :span="6">
@@ -202,6 +202,12 @@
       this.fetchCorrectRank()
     },
     methods: {
+      parseNo(no) {
+        if (no <= 0) {
+          return '未上榜'
+        }
+        return no
+      },
       async fetchScoreRank() {
         this.scoreLoading = true
         this.$axios
