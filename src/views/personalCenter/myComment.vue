@@ -28,7 +28,7 @@
         </el-checkbox-group>
       </el-row>
       <el-row>
-        <el-button icon="el-icon-search" type="primary" @click="page(1)">
+        <el-button icon="el-icon-search" type="primary" @click="fetchData()">
           查询
         </el-button>
       </el-row>
@@ -119,7 +119,7 @@
         :current-page="queryForm.pageNo"
         :total="total"
         :page-size="queryForm.pageSize"
-        @current-change="page"
+        @current-change="fetchData"
       ></el-pagination>
     </div>
     <single-question ref="question"></single-question>
@@ -202,7 +202,7 @@
       }
     },
     created() {
-      this.page()
+      this.fetchData()
     },
     methods: {
       handleJump(id, category) {
@@ -242,7 +242,7 @@
                 this.$alert('操作成功', '提示', {
                   confirmButtonText: '确定',
                   callback: (action) => {
-                    this.page(1)
+                    this.fetchData()
                   },
                 })
               })
@@ -254,7 +254,7 @@
             })
           })
       },
-      page() {
+      fetchData() {
         const _this = this
         _this.$axios
           .post('/personal/comment/list', this.queryForm)

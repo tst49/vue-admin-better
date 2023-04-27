@@ -50,6 +50,43 @@
         </router-link>
       </el-col>
     </el-row>
+    <el-divider content-position="center">
+      <i class="el-icon-edit">
+        <span style="color: blue">最近答题记录</span>
+      </i>
+    </el-divider>
+    <!-- 最近答题记录 -->
+    <el-row>
+      <el-table
+        ref="tableSort"
+        v-loading="listLoading"
+        :data="list"
+        :element-loading-text="elementLoadingText"
+      >
+        <el-table-column
+          show-overflow-tooltip
+          label="试卷名"
+          prop="title"
+        ></el-table-column>
+        <el-table-column show-overflow-tooltip label="试卷得分">
+          <template #default="{ row }">
+            <span :style="getColor(row.score)">{{ row.score }}分</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          label="作答时间"
+          prop="createTime"
+        ></el-table-column>
+        <el-table-column show-overflow-tooltip label="操作">
+          <template #default="{ row }">
+            <el-button type="text" @click="showDetail(row.id)">
+              查看详情
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
   </div>
 </template>
 
@@ -64,6 +101,9 @@
     },
     data() {
       return {
+        list: [],
+        listLoading: true,
+        elementLoadingText: '正在加载...',
         timer: 0,
         updateTime: process.env.VUE_APP_UPDATE_TIME,
         config1: {
@@ -234,7 +274,7 @@
       }
     },
     created() {
-      this.fetchData()
+      this.fetchTestRecordData()
     },
     beforeDestroy() {
       clearInterval(this.timer)
@@ -281,13 +321,31 @@
       handleChangeTheme() {
         this.$baseEventBus.$emit('theme')
       },
-      async fetchData() {
-        // const { data } = await getList()
-        // data.map((item, index) => {
-        //   if (index === data.length - 1) {
-        //     item.color = '#0bbd87'
-        //   }
-        // })
+      async fetchTestRecordData() {
+        this.listLoading = true
+        this.$axios
+          .get('/testing/answerRecord/latest')
+          .then((res) => {
+            this.list = res.data.data
+          })
+          .then(() => {
+            this.listLoading = false
+          })
+      },
+      getColor(score) {
+        if (score < 60) {
+          return 'color: red'
+        } else if (score < 80) {
+          return 'color: orange'
+        } else {
+          return 'color: green'
+        }
+      },
+      showDetail(id) {
+        this.$router.push({
+          path: '/answer/record',
+          query: { recordId: id },
+        })
       },
     },
   }

@@ -88,7 +88,7 @@
         this.$refs['form'].resetFields()
         this.form = this.$options.data().form
         this.dialogFormVisible = false
-        this.$parent.page()
+        this.$parent.fetchData()
       },
       save() {
         this.$refs['form'].validate(async (valid) => {

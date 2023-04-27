@@ -126,6 +126,7 @@
           1: 'warning',
           2: 'success',
           3: 'danger',
+          4: 'primary',
         }
         return typeMap[status]
       },
@@ -135,6 +136,7 @@
           1: '加入流程中',
           2: '已加入班级',
           3: '申请被拒绝',
+          4: '教师组',
         }
         return statusMap[status]
       },

@@ -38,7 +38,7 @@
       v-loading="listLoading"
       :data="list"
       :element-loading-text="elementLoadingText"
-      :height="height"
+      height="500px"
       @selection-change="setSelectRows"
     >
       <el-table-column type="expand">
